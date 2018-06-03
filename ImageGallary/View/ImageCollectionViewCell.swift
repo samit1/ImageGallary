@@ -13,10 +13,12 @@ class ImageCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView!
 
     
-    private (set) var url : URL?
+     var url : URL? {didSet {
+        configureCell(url: url!)
+    }
+    }
     
-    func configureCell(url : URL) {
-        self.url = url
+    private func configureCell(url : URL) {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             let urlContents = try? Data(contentsOf: url)
             DispatchQueue.main.async {

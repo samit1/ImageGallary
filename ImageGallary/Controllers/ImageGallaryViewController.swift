@@ -28,7 +28,7 @@ class ImageGallaryViewController: UICollectionViewController {
     private func loadWithTest() {
         for x in 1...30 {
             
-            var url = "https://placeimg.com/640/480/" + String(x)
+            var url = "https://placebear.com/g/640/48" + String(x)
             var data = imageItem(widthToHeightRatio: 1, url: URL(string: url)! )
             imageData.appendToEnd(item: data)
         }
@@ -48,7 +48,7 @@ class ImageGallaryViewController: UICollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         /// Check the cell is the of type ImageCollectionViewCell
         if let cell = gallary.dequeueReusableCell(withReuseIdentifier: "DraggedImage", for: indexPath) as? ImageCollectionViewCell {
-            cell.configureCell(url: imageData.gallery[indexPath.item].url!)
+            cell.url = imageData.gallery[indexPath.item].url!
             return cell
         }
             

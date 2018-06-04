@@ -10,8 +10,8 @@ import Foundation
 
 /// Data structure to image data
 /// Implement Equatable to make comarisons easier
-struct imageItem : Equatable {
-    static func == (lhs: imageItem, rhs: imageItem) -> Bool {
+struct ImageItem : Equatable {
+    static func == (lhs: ImageItem, rhs: ImageItem) -> Bool {
         guard lhs.url != nil && lhs.widthToHeightRatio != nil
             && rhs.url != nil && rhs.widthToHeightRatio != nil else {return false}
         
@@ -31,18 +31,21 @@ struct imageItem : Equatable {
     
 }
 
-typealias images = [imageItem]
+typealias images = [ImageItem]
 struct ImageGallary {
     
-    private (set) var gallery = images()
+    private (set) var gallery = images() {didSet {
+        gallery.forEach({print($0.description)})
+        }
+    }
     
-    mutating func insert(item: imageItem, at index: Int) {
+    mutating func insert(item: ImageItem, at index: Int) {
         guard gallery.indices.contains(index) else {return}
         
         gallery.insert(item, at: index)
     }
     
-    mutating func appendToEnd(item: imageItem) {
+    mutating func appendToEnd(item: ImageItem) {
         guard !gallery.contains(item) else {return}
         gallery.append(item)
     }
@@ -59,19 +62,13 @@ struct ImageGallary {
         
         gallery.swapAt(itemIndex1, itemIndex2)
     }
+}
+
+
+extension ImageItem : CustomStringConvertible {
+    var description: String {
+        return("widthToHeightRatio:  + \(widthToHeightRatio) + /n + url: + \(url) ")
+    }
     
-//
-//    /// Fetch a bag of bits. The caller can choose whether it wants to convert the data type
-//    /// Which queue to call on is up to the caller
-//
-//    func fetchImageData(at index: Int) -> Data? {
-//        guard gallery.indices.contains(index) else {return nil}
-//
-//        if let url = gallery[index].url {
-//            let urlContents = try? Data(contentsOf: url.imageURL)
-//            return urlContents
-//        }
-//        return nil
-//    }
-//
+    
 }

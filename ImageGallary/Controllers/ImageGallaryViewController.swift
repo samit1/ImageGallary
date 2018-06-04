@@ -29,7 +29,7 @@ class ImageGallaryViewController: UICollectionViewController {
         for x in 1...30 {
             
             let url = "https://placebear.com/g/640/48" + String(x)
-            let data = imageItem(widthToHeightRatio: 1, url: URL(string: url)! )
+            let data = ImageItem(widthToHeightRatio: 1, url: URL(string: url)! )
             imageData.appendToEnd(item: data)
         }
     }
@@ -78,17 +78,39 @@ class ImageGallaryViewController: UICollectionViewController {
 // UICollectionViewDragDelegate, UICollectionViewDropDelegate
 extension ImageGallaryViewController : UICollectionViewDropDelegate {
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
-        
+        guard let destinationIndexPath = coordinator.destinationIndexPath else {return}
         for item in coordinator.items {
-            if let beginIndex = item.sourceIndexPath, let endIndex = coordinator.destinationIndexPath {
+            if let beginIndex = item.sourceIndexPath {
                 collectionView.performBatchUpdates({
-                    imageData.swapIndices(itemIndex1: beginIndex.item, itemIndex2: endIndex.item)
+                    imageData.swapIndices(itemIndex1: beginIndex.item, itemIndex2: destinationIndexPath.item)
                 }, completion: {(completion) in
-                    collectionView.reloadItems(at: [beginIndex, endIndex])
+                    collectionView.reloadItems(at: [beginIndex, destinationIndexPath])
                     })
             }
             /// Otherwise, the item did not originate from internally. It needs to be added as a new item
             else {
+                /// Add a placeholder at the destinationIndex
+                let placeholderContext = coordinator.drop(
+                    item.dragItem,
+                    to: UICollectionViewDropPlaceholder(insertionIndexPath: destinationIndexPath, reuseIdentifier: "Placeholder"))
+                
+                /// Asynchonously go get the data and insert
+                item.dragItem.itemProvider.loadObject(ofClass: NSURL.self, completionHandler: { (provider, error) in
+                    DispatchQueue.main.async {
+                        if let url = provider as? URL {
+                            placeholderContext.commitInsertion(dataSourceUpdates: {[unowned self] insertionIndexPath in
+                                let urlImage = url.imageURL
+                                let imgItem = ImageItem(widthToHeightRatio: 1.0, url: urlImage)
+                                self.imageData.insert(item: imgItem, at: destinationIndexPath.item)
+                                self.gallary.reloadItems(at: [destinationIndexPath])
+                                print("interesting")
+                            })
+                        } else {
+                            placeholderContext.deletePlaceholder()
+                        }
+                    }
+                })
+                
                 
             }
         }
@@ -100,8 +122,9 @@ extension ImageGallaryViewController : UICollectionViewDropDelegate {
     func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
         //print(session.canLoadObjects(ofClass: NSURL.self))
         print(session.canLoadObjects(ofClass: UIImage.self))
-        return  session.canLoadObjects(ofClass: UIImage.self) //session.canLoadObjects(ofClass: NSURL.self) &&
+        return  session.canLoadObjects(ofClass: UIImage.self) && session.canLoadObjects(ofClass: NSURL.self)
     }
+    
     
     
     
@@ -129,5 +152,11 @@ extension ImageGallaryViewController : UICollectionViewDragDelegate {
 extension ImageGallaryViewController : UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 320, height: 240)
+    }
+}
+
+extension ImageGallaryViewController : UIDropInteractionDelegate {
+    func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
+        return session.canLoadObjects(ofClass: NSURL.self) && session.canLoadObjects(ofClass: UIImage.self)
     }
 }

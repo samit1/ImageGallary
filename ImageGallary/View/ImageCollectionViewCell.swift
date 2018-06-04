@@ -11,24 +11,15 @@ import UIKit
 class ImageCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var imageView: UIImageView!
-
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
-     var url : URL? {didSet {
-        configureCell(url: url!)
-    }
-    }
     
-    private func configureCell(url : URL) {
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            let urlContents = try? Data(contentsOf: url)
-            DispatchQueue.main.async {
-                // TODO: , url == self?.imageURL maybe add this here
-                if let imageData = urlContents, url == self?.url   {
-                    self?.imageView?.image = UIImage(data: imageData)
-                    
-                }
-            }
+    var img : UIImage! {
+        didSet {
+            imageView?.image = img 
         }
     }
+    
+
     
 }

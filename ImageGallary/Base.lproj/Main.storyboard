@@ -34,15 +34,21 @@
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="mIN-Sr-9o7">
                                             <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         </imageView>
+                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="x5b-kZ-0pq">
+                                            <rect key="frame" x="15" y="15" width="20" height="20"/>
+                                        </activityIndicatorView>
                                     </subviews>
                                 </view>
                                 <constraints>
+                                    <constraint firstItem="x5b-kZ-0pq" firstAttribute="centerY" secondItem="dUd-r7-xKl" secondAttribute="centerY" id="9F2-E7-ceW"/>
+                                    <constraint firstItem="x5b-kZ-0pq" firstAttribute="centerX" secondItem="dUd-r7-xKl" secondAttribute="centerX" id="9tf-Uw-REq"/>
                                     <constraint firstAttribute="bottom" secondItem="mIN-Sr-9o7" secondAttribute="bottom" id="TlQ-JJ-gLQ"/>
                                     <constraint firstAttribute="trailing" secondItem="mIN-Sr-9o7" secondAttribute="trailing" id="iEw-cc-bYM"/>
                                     <constraint firstItem="mIN-Sr-9o7" firstAttribute="leading" secondItem="dUd-r7-xKl" secondAttribute="leading" id="mQn-9R-L84"/>
                                     <constraint firstItem="mIN-Sr-9o7" firstAttribute="top" secondItem="dUd-r7-xKl" secondAttribute="top" id="yga-C1-dJF"/>
                                 </constraints>
                                 <connections>
+                                    <outlet property="activityIndicator" destination="x5b-kZ-0pq" id="AUF-Yu-2ub"/>
                                     <outlet property="imageView" destination="mIN-Sr-9o7" id="GCH-dr-0ad"/>
                                 </connections>
                             </collectionViewCell>

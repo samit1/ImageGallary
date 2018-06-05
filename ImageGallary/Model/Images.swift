@@ -55,10 +55,12 @@ struct ImageGallary {
         gallery.remove(at: index)
     }
     
-    mutating func moveToIndex(item : ImageItem, index: Int) {
-        guard let itemExists = gallery.index(of: item) else {return}
-        let temp = gallery.remove(at: itemExists)
-        gallery.insert(temp, at: index)
+    mutating func swapIndices(itemIndex1 : Int, itemIndex2: Int) {
+        guard gallery.indices.contains(itemIndex1)
+            && gallery.indices.contains(itemIndex2) && itemIndex1 != itemIndex2 else {return}
+        
+        
+        gallery.swapAt(itemIndex1, itemIndex2)
     }
 }
 

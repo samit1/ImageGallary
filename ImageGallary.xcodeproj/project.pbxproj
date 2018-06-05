@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0F3E6D3620C43301002FAF40 /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F3E6D3520C43301002FAF40 /* ImageCollectionViewCell.swift */; };
 		0F3E6D3920C6BBAF002FAF40 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F3E6D3820C6BBAF002FAF40 /* ImageLoader.swift */; };
+		0F8FC5D720C72CBA00E80FB9 /* GallaryStoreTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F8FC5D620C72CBA00E80FB9 /* GallaryStoreTableViewController.swift */; };
+		0F8FC5D920C72CDE00E80FB9 /* GallaryStoreModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F8FC5D820C72CDE00E80FB9 /* GallaryStoreModel.swift */; };
 		0FBC397820C0E10C00828ED1 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FBC397720C0E10C00828ED1 /* Images.swift */; };
 		0FD0AE1920C0C01A00E7D4E3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FD0AE1820C0C01A00E7D4E3 /* AppDelegate.swift */; };
 		0FD0AE1B20C0C01A00E7D4E3 /* ImageGallaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FD0AE1A20C0C01A00E7D4E3 /* ImageGallaryViewController.swift */; };
@@ -39,8 +41,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0F3E6D3520C43301002FAF40 /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ImageCollectionViewCell.swift; path = ImageGallary/View/ImageCollectionViewCell.swift; sourceTree = SOURCE_ROOT; };
+		0F3E6D3520C43301002FAF40 /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ImageCollectionViewCell.swift; path = /Users/taha/Documents/Dev/ImageGallary/ImageGallary/View/ImageCollectionViewCell.swift; sourceTree = "<absolute>"; };
 		0F3E6D3820C6BBAF002FAF40 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
+		0F8FC5D620C72CBA00E80FB9 /* GallaryStoreTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GallaryStoreTableViewController.swift; sourceTree = "<group>"; };
+		0F8FC5D820C72CDE00E80FB9 /* GallaryStoreModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GallaryStoreModel.swift; sourceTree = "<group>"; };
 		0FBC397720C0E10C00828ED1 /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		0FD0AE1520C0C01A00E7D4E3 /* ImageGallary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageGallary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0FD0AE1820C0C01A00E7D4E3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -90,7 +94,36 @@
 				0F3E6D3520C43301002FAF40 /* ImageCollectionViewCell.swift */,
 				0F3E6D3820C6BBAF002FAF40 /* ImageLoader.swift */,
 			);
-			path = View;
+			name = View;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		0F8FC5D420C72BAD00E80FB9 /* GallaryDetail */ = {
+			isa = PBXGroup;
+			children = (
+				0FBC397920C0E11500828ED1 /* Model */,
+				0FBC397220C0D69000828ED1 /* Controllers */,
+				0F3E6D3720C4330F002FAF40 /* View */,
+			);
+			name = GallaryDetail;
+			path = View/GallaryDetail;
+			sourceTree = "<group>";
+		};
+		0F8FC5D520C72C9A00E80FB9 /* GallaryStore */ = {
+			isa = PBXGroup;
+			children = (
+				0F8FC5DA20C7499A00E80FB9 /* Controlletr */,
+				0F8FC5D620C72CBA00E80FB9 /* GallaryStoreTableViewController.swift */,
+				0F8FC5D820C72CDE00E80FB9 /* GallaryStoreModel.swift */,
+			);
+			path = GallaryStore;
+			sourceTree = "<group>";
+		};
+		0F8FC5DA20C7499A00E80FB9 /* Controlletr */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Controlletr;
 			sourceTree = "<group>";
 		};
 		0FBC396F20C0C64F00828ED1 /* Supporting Files */ = {
@@ -144,10 +177,9 @@
 			isa = PBXGroup;
 			children = (
 				0FD0AE1C20C0C01A00E7D4E3 /* Main.storyboard */,
-				0F3E6D3720C4330F002FAF40 /* View */,
-				0FBC397220C0D69000828ED1 /* Controllers */,
+				0F8FC5D520C72C9A00E80FB9 /* GallaryStore */,
+				0F8FC5D420C72BAD00E80FB9 /* GallaryDetail */,
 				0FD0AE2720C0C01C00E7D4E3 /* Info.plist */,
-				0FBC397920C0E11500828ED1 /* Model */,
 				0FBC396F20C0C64F00828ED1 /* Supporting Files */,
 				0FD0AE4920C0C03000E7D4E3 /* Utilities.swift */,
 			);
@@ -303,9 +335,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0F8FC5D720C72CBA00E80FB9 /* GallaryStoreTableViewController.swift in Sources */,
 				0F3E6D3620C43301002FAF40 /* ImageCollectionViewCell.swift in Sources */,
 				0FD0AE1B20C0C01A00E7D4E3 /* ImageGallaryViewController.swift in Sources */,
 				0FD0AE1920C0C01A00E7D4E3 /* AppDelegate.swift in Sources */,
+				0F8FC5D920C72CDE00E80FB9 /* GallaryStoreModel.swift in Sources */,
 				0FD0AE4A20C0C03000E7D4E3 /* Utilities.swift in Sources */,
 				0FD0AE2120C0C01B00E7D4E3 /* ImageGallary.xcdatamodeld in Sources */,
 				0F3E6D3920C6BBAF002FAF40 /* ImageLoader.swift in Sources */,

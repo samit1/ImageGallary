@@ -32,7 +32,7 @@ struct ImageItem : Equatable {
 }
 
 typealias images = [ImageItem]
-struct ImageGallary {
+struct ImageGallaryItem {
     
     private (set) var gallery = images() {didSet {
         //gallery.forEach({print($0.description)})

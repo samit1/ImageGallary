@@ -13,7 +13,7 @@ class ImageGallaryViewController: UICollectionViewController {
     
     @IBOutlet var gallary: UICollectionView!
     
-    var imageData = ImageGallary()
+    var imageData = ImageGallaryItem()
     
     
     // MARK: Lifecycle
@@ -22,14 +22,16 @@ class ImageGallaryViewController: UICollectionViewController {
         gallary.dragDelegate = self
         gallary.dropDelegate = self
         
-        loadWithTest()
         
     }
-    
+    var baseURL : String? {didSet {
+        loadWithTest()
+        }
+    }
     private func loadWithTest() {
         for x in 1...30 {
-            
-            let url = "https://placebear.com/g/640/48" + String(x)
+            guard baseURL != nil else {return}
+            let url = baseURL! + String(x)
             let data = ImageItem(heightMultipleToWidth: 1, url: URL(string: url)! )
             imageData.appendToEnd(item: data)
         }

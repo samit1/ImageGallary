@@ -90,10 +90,10 @@ extension ImageGallaryViewController : UICollectionViewDropDelegate {
                     imageData.swapIndices(itemIndex1: beginIndex.item, itemIndex2: destinationIndexPath.item)
                 }, completion: {(completion) in
                     collectionView.reloadItems(at: [beginIndex, destinationIndexPath])
-                    })
+                })
             }
-
-            /// If the drag originates from ourside of the collectionView (i.e., an external source), then we place a Placeholder to put the data in.
+                
+                /// If the drag originates from ourside of the collectionView (i.e., an external source), then we place a Placeholder to put the data in.
             else {
                 /// Add a placeholder at the destinationIndex
                 let placeholderContext = coordinator.drop(
@@ -126,9 +126,8 @@ extension ImageGallaryViewController : UICollectionViewDropDelegate {
     /// Specify the type of data which can be dropped
     /// The data must be a URL and image
     func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
-        //print(session.canLoadObjects(ofClass: NSURL.self))
         print(session.canLoadObjects(ofClass: UIImage.self))
-        return  session.canLoadObjects(ofClass: UIImage.self) && session.canLoadObjects(ofClass: NSURL.self)
+        return  session.canLoadObjects(ofClass: NSURL.self)
     }
     
     
@@ -136,7 +135,6 @@ extension ImageGallaryViewController : UICollectionViewDropDelegate {
     
     func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
         let isSelf = (session.localDragSession?.localContext as? UICollectionView) == gallary
-        print("Hi")
         return UICollectionViewDropProposal(operation: isSelf ? .move : .copy, intent: .insertAtDestinationIndexPath)
     }
 }
@@ -145,15 +143,33 @@ extension ImageGallaryViewController : UICollectionViewDropDelegate {
 
 extension ImageGallaryViewController : UICollectionViewDragDelegate {
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        guard imageData.gallery.indices.contains(indexPath.item) else {return []}
+        var dragItems = [UIDragItem]()
+        //        if let img = (gallary.cellForItem(at: indexPath) as? ImageCollectionViewCell)?.imageView?.image {
+        //            let dragItem = UIDragItem(itemProvider: NSItemProvider(object: img ))
+        //            dragItem.localObject = dragItem
+        //            dragItems.append(dragItem)
+        //        }
         
-        if let img = (gallary.cellForItem(at: indexPath) as? ImageCollectionViewCell)?.imageView?.image {
-            
-            let dragItem = UIDragItem(itemProvider: NSItemProvider(object: img ))
+        
+        if let url = imageData.gallery[indexPath.item].url {
+            let dragItem = UIDragItem(itemProvider: NSItemProvider(object: url as NSItemProviderWriting))
             dragItem.localObject = dragItem
-            
-            return [dragItem]
+            dragItems.append(dragItem)
         }
-        return []
+        
+        if let wXh = imageData.gallery[indexPath.item].widthToHeightRatio {
+            if let wxhD = wXh as? NSItemProviderWriting {
+                let dragItem = UIDragItem(itemProvider: NSItemProvider(object: wxhD))
+                dragItem.localObject = dragItem
+                dragItems.append(dragItem)
+            }
+        }
+        
+        
+        return dragItems
+        
+        
     }
 }
 

@@ -49,19 +49,7 @@ class ImageGallaryViewController: UICollectionViewController {
         guard let url = imageData.gallery[indexPath.item].url else {return placeholder}
         
         if let cell = gallary.dequeueReusableCell(withReuseIdentifier: "DraggedImage", for: indexPath) as? ImageCollectionViewCell {
-            cell.activityIndicator.startAnimating()
-            cell.img = nil 
-            DispatchQueue.global(qos: .userInitiated).async {
-                let urlReturn = url
-                let urlContents = try? Data(contentsOf: urlReturn)
-                
-                DispatchQueue.main.async {
-                    if let imageData = urlContents, url == urlReturn, let img = UIImage(data: imageData)   {
-                        cell.img = img
-                        cell.activityIndicator.stopAnimating()
-                    }
-                }
-            }
+            cell.url = url
             return cell
         }
         return placeholder
@@ -101,13 +89,12 @@ extension ImageGallaryViewController : UICollectionViewDropDelegate {
                 /// Asynchonously go get the data and insert
                 item.dragItem.itemProvider.loadObject(ofClass: NSURL.self, completionHandler: { (provider, error) in
                     DispatchQueue.main.async {
+                        
                         if let url = provider as? URL {
                             placeholderContext.commitInsertion(dataSourceUpdates: {[unowned self] insertionIndexPath in
                                 let urlImage = url.imageURL
                                 let imgItem = ImageItem(heightMultipleToWidth: 1.0, url: urlImage)
                                 self.imageData.insert(item: imgItem, at: destinationIndexPath.item)
-                                self.gallary.reloadItems(at: [destinationIndexPath])
-                                print("interesting")
                             })
                         } else {
                             placeholderContext.deletePlaceholder()
@@ -159,8 +146,6 @@ extension ImageGallaryViewController : UICollectionViewDragDelegate {
         }
         
         return dragItems
-        
-        
     }
 }
 
@@ -185,6 +170,7 @@ extension ImageGallaryViewController : UIDropInteractionDelegate {
         return session.canLoadObjects(ofClass: NSURL.self) && session.canLoadObjects(ofClass: UIImage.self)
     }
 }
+
 
 
 

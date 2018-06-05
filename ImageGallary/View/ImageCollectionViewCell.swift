@@ -10,13 +10,13 @@ import UIKit
 
 class ImageCollectionViewCell: UICollectionViewCell {
     
-    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var imageView: ImageLoader!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     
-    var img : UIImage! {
+    var url : URL! {
         didSet {
-            imageView?.image = img 
+            imageView.setImgForURL(url: url)
         }
     }
     

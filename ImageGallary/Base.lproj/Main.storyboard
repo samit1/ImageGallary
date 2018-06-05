@@ -31,7 +31,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="mIN-Sr-9o7">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="mIN-Sr-9o7" customClass="ImageLoader" customModule="ImageGallary" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         </imageView>
                                         <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="x5b-kZ-0pq">
@@ -58,16 +58,7 @@
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="e5l-tZ-z20">
-                                            <rect key="frame" x="15" y="15" width="20" height="20"/>
-                                        </activityIndicatorView>
-                                    </subviews>
                                 </view>
-                                <constraints>
-                                    <constraint firstItem="e5l-tZ-z20" firstAttribute="centerX" secondItem="n5G-lw-2vZ" secondAttribute="centerX" id="9U0-yo-JbD"/>
-                                    <constraint firstItem="e5l-tZ-z20" firstAttribute="centerY" secondItem="n5G-lw-2vZ" secondAttribute="centerY" id="aLU-Xn-vyc"/>
-                                </constraints>
                             </collectionViewCell>
                         </cells>
                         <connections>

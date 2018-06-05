@@ -12,19 +12,19 @@ import Foundation
 /// Implement Equatable to make comarisons easier
 struct ImageItem : Equatable {
     static func == (lhs: ImageItem, rhs: ImageItem) -> Bool {
-        guard lhs.url != nil && lhs.widthToHeightRatio != nil
-            && rhs.url != nil && rhs.widthToHeightRatio != nil else {return false}
+        guard lhs.url != nil && lhs.heightMultipleToWidth != nil
+            && rhs.url != nil && rhs.heightMultipleToWidth != nil else {return false}
         
         
-        return lhs.widthToHeightRatio == rhs.widthToHeightRatio
+        return lhs.heightMultipleToWidth == rhs.heightMultipleToWidth
             && lhs.url == rhs.url
     }
     
-    private (set) var widthToHeightRatio: Double?
+    private (set) var heightMultipleToWidth: Double?
     private (set) var url : URL?
     
-    init(widthToHeightRatio : Double, url : URL) {
-        self.widthToHeightRatio = widthToHeightRatio
+    init(heightMultipleToWidth : Double, url : URL) {
+        self.heightMultipleToWidth = heightMultipleToWidth
         self.url = url
     }
     
@@ -35,7 +35,7 @@ typealias images = [ImageItem]
 struct ImageGallary {
     
     private (set) var gallery = images() {didSet {
-        gallery.forEach({print($0.description)})
+        //gallery.forEach({print($0.description)})
         }
     }
     
@@ -67,7 +67,7 @@ struct ImageGallary {
 
 extension ImageItem : CustomStringConvertible {
     var description: String {
-        return("widthToHeightRatio:  + \(widthToHeightRatio) + /n + url: + \(url) ")
+        return("widthToHeightRatio:  + \(heightMultipleToWidth) + /n + url: + \(url) ")
     }
     
     

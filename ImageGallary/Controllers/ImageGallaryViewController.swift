@@ -12,12 +12,13 @@ class ImageGallaryViewController: UICollectionViewController {
     
     
     @IBOutlet var gallary: UICollectionView!
+    
     var imageData = ImageGallary()
     
+    
+    // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        //        gallary.delegate = self
-        //        gallary.dataSource = self
         gallary.dragDelegate = self
         gallary.dropDelegate = self
         
@@ -29,15 +30,12 @@ class ImageGallaryViewController: UICollectionViewController {
         for x in 1...30 {
             
             let url = "https://placebear.com/g/640/48" + String(x)
-            let data = ImageItem(widthToHeightRatio: 1, url: URL(string: url)! )
+            let data = ImageItem(heightMultipleToWidth: 1, url: URL(string: url)! )
             imageData.appendToEnd(item: data)
         }
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+    
     
     // MARK: CollectionView Rows and Columns
     
@@ -106,7 +104,7 @@ extension ImageGallaryViewController : UICollectionViewDropDelegate {
                         if let url = provider as? URL {
                             placeholderContext.commitInsertion(dataSourceUpdates: {[unowned self] insertionIndexPath in
                                 let urlImage = url.imageURL
-                                let imgItem = ImageItem(widthToHeightRatio: 1.0, url: urlImage)
+                                let imgItem = ImageItem(heightMultipleToWidth: 1.0, url: urlImage)
                                 self.imageData.insert(item: imgItem, at: destinationIndexPath.item)
                                 self.gallary.reloadItems(at: [destinationIndexPath])
                                 print("interesting")
@@ -126,7 +124,7 @@ extension ImageGallaryViewController : UICollectionViewDropDelegate {
     /// Specify the type of data which can be dropped
     /// The data must be a URL and image
     func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
-        print(session.canLoadObjects(ofClass: UIImage.self))
+        //print(session.canLoadObjects(ofClass: UIImage.self))
         return  session.canLoadObjects(ofClass: NSURL.self)
     }
     
@@ -145,12 +143,6 @@ extension ImageGallaryViewController : UICollectionViewDragDelegate {
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         guard imageData.gallery.indices.contains(indexPath.item) else {return []}
         var dragItems = [UIDragItem]()
-        //        if let img = (gallary.cellForItem(at: indexPath) as? ImageCollectionViewCell)?.imageView?.image {
-        //            let dragItem = UIDragItem(itemProvider: NSItemProvider(object: img ))
-        //            dragItem.localObject = dragItem
-        //            dragItems.append(dragItem)
-        //        }
-        
         
         if let url = imageData.gallery[indexPath.item].url {
             let dragItem = UIDragItem(itemProvider: NSItemProvider(object: url as NSItemProviderWriting))
@@ -158,14 +150,13 @@ extension ImageGallaryViewController : UICollectionViewDragDelegate {
             dragItems.append(dragItem)
         }
         
-        if let wXh = imageData.gallery[indexPath.item].widthToHeightRatio {
+        if let wXh = imageData.gallery[indexPath.item].heightMultipleToWidth {
             if let wxhD = wXh as? NSItemProviderWriting {
                 let dragItem = UIDragItem(itemProvider: NSItemProvider(object: wxhD))
                 dragItem.localObject = dragItem
                 dragItems.append(dragItem)
             }
         }
-        
         
         return dragItems
         
@@ -176,7 +167,14 @@ extension ImageGallaryViewController : UICollectionViewDragDelegate {
 // MARK: CollectionViewFlowLayoutDelegate
 extension ImageGallaryViewController : UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 320, height: 240)
+        guard imageData.gallery.indices.contains(indexPath.item) else {return CGSize.zero}
+        
+        let width = collectionView.bounds.width / 4
+        let heightMultiple = imageData.gallery[indexPath.item].heightMultipleToWidth
+        let height = heightMultiple != nil ?  width * CGFloat(heightMultiple!) : 0
+        
+        
+        return CGSize(width: width, height: height)
     }
 }
 
@@ -187,3 +185,6 @@ extension ImageGallaryViewController : UIDropInteractionDelegate {
         return session.canLoadObjects(ofClass: NSURL.self) && session.canLoadObjects(ofClass: UIImage.self)
     }
 }
+
+
+

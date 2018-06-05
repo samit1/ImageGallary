@@ -9,14 +9,14 @@
 import UIKit
 
 class GallaryStoreViewController: UIViewController {
-
+    
     @IBOutlet weak var gallaryTable: UITableView!
     @IBAction func addGallaryTap(_ sender: UIBarButtonItem) {
         galleries.append(GallaryStoreItem())
         
     }
     private var gallaryModel = GalleriesModel()
-
+    
     fileprivate var galleries = [GallaryStoreItem]() {didSet {
         print(galleries.count)
         self.gallaryTable?.reloadData()
@@ -26,13 +26,13 @@ class GallaryStoreViewController: UIViewController {
         self.gallaryTable?.reloadData()
         }
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         gallaryTable.delegate = self
         gallaryTable.dataSource = self 
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -48,9 +48,8 @@ extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegat
                 guard galleries.indices.contains(indexPath.row) else {return UITableViewCell()}
                 cell.textField.text = galleries[indexPath.row].gallaryname ?? ""
                 cell.delegate = self
-                return cell 
+                return cell
             }
-            
         }
         return UITableViewCell()
     }
@@ -86,14 +85,16 @@ extension GallaryStoreViewController : GalleryListDelegate {
         galleries = viewableGalleries
     }
     
-
+    
 }
 
 extension GallaryStoreViewController : UserInputDelegate {
-    func userUpdatedTextFieldValue(with resulting: String) {
-        print(resulting)
-        //print
+    func userUpdatedTextFieldValue(with resulting: String, sender: GallaryNameTableViewCell) {
+        guard let indexPath = self.gallaryTable.indexPath(for: sender) else {return}
+        print(indexPath)
     }
+    
+    
     
     
 }

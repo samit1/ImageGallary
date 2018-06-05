@@ -9,7 +9,7 @@
 import UIKit
 
 protocol UserInputDelegate : class {
-    func userUpdatedTextFieldValue(with resulting: String)
+    func userUpdatedTextFieldValue(with resulting: String, sender : GallaryNameTableViewCell)
 }
 
 class GallaryNameTableViewCell: UITableViewCell {
@@ -34,7 +34,7 @@ class GallaryNameTableViewCell: UITableViewCell {
 extension GallaryNameTableViewCell : UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         if let text = textField.text {
-            delegate?.userUpdatedTextFieldValue(with: text)
+            delegate?.userUpdatedTextFieldValue(with: text, sender: self )
         }
     }
 }

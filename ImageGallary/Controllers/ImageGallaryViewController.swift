@@ -73,11 +73,16 @@ class ImageGallaryViewController: UICollectionViewController {
     
 }
 
-
+// MARK: CollectionViewDropDelegate
 
 // UICollectionViewDragDelegate, UICollectionViewDropDelegate
+
 extension ImageGallaryViewController : UICollectionViewDropDelegate {
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+        /// There are two differenct drop scenarios. The drop can either be an internal drag and drop from the collectionView
+        /// or the drop is from an external source.
+        
+        /// If the drag and drop if from the collectionView, then we notify our model that there was a rearrangement.
         guard let destinationIndexPath = coordinator.destinationIndexPath else {return}
         for item in coordinator.items {
             if let beginIndex = item.sourceIndexPath {
@@ -87,7 +92,8 @@ extension ImageGallaryViewController : UICollectionViewDropDelegate {
                     collectionView.reloadItems(at: [beginIndex, destinationIndexPath])
                     })
             }
-            /// Otherwise, the item did not originate from internally. It needs to be added as a new item
+
+            /// If the drag originates from ourside of the collectionView (i.e., an external source), then we place a Placeholder to put the data in.
             else {
                 /// Add a placeholder at the destinationIndex
                 let placeholderContext = coordinator.drop(
@@ -135,8 +141,11 @@ extension ImageGallaryViewController : UICollectionViewDropDelegate {
     }
 }
 
+// MARK: CollectionViewDragDelegate
+
 extension ImageGallaryViewController : UICollectionViewDragDelegate {
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        
         if let img = (gallary.cellForItem(at: indexPath) as? ImageCollectionViewCell)?.imageView?.image {
             
             let dragItem = UIDragItem(itemProvider: NSItemProvider(object: img ))
@@ -148,12 +157,14 @@ extension ImageGallaryViewController : UICollectionViewDragDelegate {
     }
 }
 
-
+// MARK: CollectionViewFlowLayoutDelegate
 extension ImageGallaryViewController : UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 320, height: 240)
     }
 }
+
+
 
 extension ImageGallaryViewController : UIDropInteractionDelegate {
     func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {

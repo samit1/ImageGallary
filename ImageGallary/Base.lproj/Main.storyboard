@@ -107,10 +107,10 @@
             </objects>
             <point key="canvasLocation" x="-927.20000000000005" y="-832.53373313343332"/>
         </scene>
-        <!--View Controller-->
+        <!--Gallary Store View Controller-->
         <scene sceneID="3xm-AF-Y1b">
             <objects>
-                <viewController id="QKF-uM-5vq" sceneMemberID="viewController">
+                <viewController id="QKF-uM-5vq" customClass="GallaryStoreViewController" customModule="ImageGallary" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="7nW-HM-qe6">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -130,8 +130,15 @@
                         <viewLayoutGuide key="safeArea" id="YcJ-5H-13z"/>
                     </view>
                     <navigationItem key="navigationItem" id="3ZH-zZ-hDE">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="kC6-nn-lCV"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="kC6-nn-lCV">
+                            <connections>
+                                <action selector="addGallaryTap:" destination="QKF-uM-5vq" id="mOi-9N-49l"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="gallaryTable" destination="Zpo-id-9Vn" id="KSe-nj-oCH"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ESp-te-mPW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

@@ -19,8 +19,8 @@ class GallaryStoreItem  {
 }
 
 class GalleriesModel {
-    private var viewableGalleries = [GallaryStoreItem]().uniquified {didSet { }}
-    private var recentltyDeletedGalleries = [GallaryStoreItem]().uniquified {didSet { }}
+    private var viewableGalleries = [GallaryStoreItem]().uniquified {didSet {delegate?.viewableGalleriesDidChange(viewableGalleries: viewableGalleries) }}
+    private var recentltyDeletedGalleries = [GallaryStoreItem]().uniquified {didSet { delegate?.recentlyDeletedGalleriesDidChange(recentlyDeleted: recentltyDeletedGalleries)}}
     
     weak var delegate : GalleryListDelegate?
     
@@ -41,16 +41,9 @@ class GalleriesModel {
         if viewableGalleries.contains(gallary) {
             let gallaryToMove = viewableGalleries.remove(at: viewableGalleries.index(of: gallary)!)
             recentltyDeletedGalleries.append(gallaryToMove)
-            
-            /// Notify delegates
-            delegate?.viewableGalleriesDidChange(viewableGalleries: viewableGalleries)
-            delegate?.recentlyDeletedGalleriesDidChange(recentlyDeleted: recentltyDeletedGalleries)
             return
         } else if recentltyDeletedGalleries.contains(gallary) {
             recentltyDeletedGalleries.remove(at: recentltyDeletedGalleries.index(of: gallary)!)
-            
-            /// Notify delegate
-            delegate?.recentlyDeletedGalleriesDidChange(recentlyDeleted: recentltyDeletedGalleries)
             return
         }
     }
@@ -59,20 +52,16 @@ class GalleriesModel {
         
         if let gallaryIndex = viewableGalleries.index(of: gallaryItem) {
             viewableGalleries[gallaryIndex].gallaryname = nameAfterChange
-            delegate?.viewableGalleriesDidChange(viewableGalleries: viewableGalleries)
             return
         }
         
         if let gallaryIndex = recentltyDeletedGalleries.index(of: gallaryItem) {
             recentltyDeletedGalleries[gallaryIndex].gallaryname = nameAfterChange
-            delegate?.recentlyDeletedGalleriesDidChange(recentlyDeleted: recentltyDeletedGalleries)
             return
         }
         let newItem = GallaryStoreItem()
         newItem.gallaryname = nameAfterChange
-        viewableGalleries.append(newItem)
-        delegate?.viewableGalleriesDidChange(viewableGalleries: viewableGalleries)
-    
+        viewableGalleries.append(newItem)    
     }
 }
 

@@ -30,7 +30,8 @@ class GallaryStoreViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         gallaryTable.delegate = self
-        gallaryTable.dataSource = self 
+        gallaryTable.dataSource = self
+        gallaryModel.delegate = self 
     }
     
     override func didReceiveMemoryWarning() {
@@ -91,10 +92,21 @@ extension GallaryStoreViewController : GalleryListDelegate {
 extension GallaryStoreViewController : UserInputDelegate {
     func userUpdatedTextFieldValue(with resulting: String, sender: GallaryNameTableViewCell) {
         guard let indexPath = self.gallaryTable.indexPath(for: sender) else {return}
-        print(indexPath)
+        
+        switch indexPath.section {
+        case 0:
+            gallaryModel.requestNameUpdate(for: galleries[indexPath.row], with: resulting)
+        case 1:
+            gallaryModel.requestNameUpdate(for: recentlyDeletedGalleries[indexPath.row], with: resulting)
+        default :
+            return
+        }
+        
     }
     
-    
-    
-    
 }
+
+
+
+
+

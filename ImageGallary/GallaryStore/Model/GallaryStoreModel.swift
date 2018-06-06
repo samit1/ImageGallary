@@ -19,8 +19,8 @@ class GallaryStoreItem  {
 }
 
 class GalleriesModel {
-    private var viewableGalleries = [GallaryStoreItem]().uniquified
-    private var recentltyDeletedGalleries = [GallaryStoreItem]().uniquified
+    private var viewableGalleries = [GallaryStoreItem]().uniquified {didSet { }}
+    private var recentltyDeletedGalleries = [GallaryStoreItem]().uniquified {didSet { }}
     
     weak var delegate : GalleryListDelegate?
     
@@ -53,6 +53,26 @@ class GalleriesModel {
             delegate?.recentlyDeletedGalleriesDidChange(recentlyDeleted: recentltyDeletedGalleries)
             return
         }
+    }
+    
+    func requestNameUpdate(for gallaryItem: GallaryStoreItem, with nameAfterChange: String) {
+        
+        if let gallaryIndex = viewableGalleries.index(of: gallaryItem) {
+            viewableGalleries[gallaryIndex].gallaryname = nameAfterChange
+            delegate?.viewableGalleriesDidChange(viewableGalleries: viewableGalleries)
+            return
+        }
+        
+        if let gallaryIndex = recentltyDeletedGalleries.index(of: gallaryItem) {
+            recentltyDeletedGalleries[gallaryIndex].gallaryname = nameAfterChange
+            delegate?.recentlyDeletedGalleriesDidChange(recentlyDeleted: recentltyDeletedGalleries)
+            return
+        }
+        let newItem = GallaryStoreItem()
+        newItem.gallaryname = nameAfterChange
+        viewableGalleries.append(newItem)
+        delegate?.viewableGalleriesDidChange(viewableGalleries: viewableGalleries)
+    
     }
 }
 

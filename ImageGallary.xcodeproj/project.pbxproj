@@ -114,9 +114,9 @@
 		0F8FC5D520C72C9A00E80FB9 /* GallaryStore */ = {
 			isa = PBXGroup;
 			children = (
+				0F8FC5DA20C7499A00E80FB9 /* Controller */,
 				0F8FC5DE20C75D8600E80FB9 /* Model */,
 				0F8FC5DB20C74C0A00E80FB9 /* View */,
-				0F8FC5DA20C7499A00E80FB9 /* Controller */,
 			);
 			path = GallaryStore;
 			sourceTree = "<group>";

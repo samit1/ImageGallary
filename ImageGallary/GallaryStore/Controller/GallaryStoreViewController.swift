@@ -13,7 +13,6 @@ class GallaryStoreViewController: UIViewController {
     @IBOutlet weak var gallaryTable: UITableView!
     @IBAction func addGallaryTap(_ sender: UIBarButtonItem) {
         galleries.append(GallaryStoreItem())
-        
     }
     private var gallaryModel = GalleriesModel()
     
@@ -38,6 +37,18 @@ class GallaryStoreViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    
+    @IBAction func wasDoubleTapped(_ sender: UITapGestureRecognizer) {
+        print("hey")
+        if let cellTapped  = gallaryTable.indexPathForSelectedRow {
+            let cell = gallaryTable.cellForRow(at: cellTapped)
+            if let gallaryCell = cell as? GallaryNameTableViewCell {
+                gallaryCell.isEditing = true
+            }
+        }
+    }
+    
 }
 
 extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegate {
@@ -49,6 +60,7 @@ extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegat
                 guard galleries.indices.contains(indexPath.row) else {return UITableViewCell()}
                 cell.textField.text = galleries[indexPath.row].gallaryname ?? ""
                 cell.delegate = self
+                cell.isEditing = false
                 return cell
             }
         }
@@ -75,7 +87,11 @@ extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegat
             return 0
         }
     }
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("THIS WAS FUCKING SELECTED")
+        let cell = gallaryTable.cellForRow(at: indexPath)
+        performSegue(withIdentifier: "showGallaryDetail", sender: cell)
+    }
     
     // MARK: Segues
 
@@ -88,6 +104,15 @@ extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegat
             if identifier == "showGallaryDetail" {
                 if let destinationVC = segue.destination.contents as? ImageGallaryViewController {
                     //destinationVC.imageData = galleries[cellSend?.item]
+                    
+                    if cell.textField.text == "Cat" {
+                        destinationVC.baseURL = "http://placekitten.com/g/200/30"
+                    }
+                    
+                    if cell.textField.text == "Bear" {
+                        destinationVC.baseURL = "https://placebear.com/g/640/48"
+                    }
+                    
                 }
             }
             }

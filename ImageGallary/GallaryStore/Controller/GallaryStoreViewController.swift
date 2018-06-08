@@ -58,7 +58,7 @@ extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegat
                 guard galleries.indices.contains(indexPath.row) else {return UITableViewCell()}
                 cell.textField.text = galleries[indexPath.row].galleryName 
                 cell.delegate = self
-                cell.isEditing = false
+                //cell.isEditing = false
                 return cell
             }
         }
@@ -106,6 +106,7 @@ extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegat
                         if galleries.indices.contains(cellSend.row) {
                             destinationVC.imageData = galleries[cellSend.row]
                             destinationVC.delegate = self
+                           // cell.isEditing = false
                             print("segue happened")
                         }
                     }
@@ -133,7 +134,6 @@ extension GallaryStoreViewController : UserInputDelegate {
         
         switch indexPath.section {
         case 0:
-            //guard galleries.indices.contains(indexPath.row) else {return}
             gallaryModel.requestNameUpdate(for: galleries[indexPath.row], with: resulting)
         case 1:
             gallaryModel.requestNameUpdate(for: recentlyDeletedGalleries[indexPath.row], with: resulting)
@@ -146,7 +146,8 @@ extension GallaryStoreViewController : UserInputDelegate {
 
 extension GallaryStoreViewController : ImageDetailDataDelegate {
     func imageDetailWillDisappear(imageData: ImageGallary) {
-        gallaryModel.requestGallaryContentsUpdate(for: imageData)
+       // gallaryModel.requestGallaryContentsUpdate(for: imageData)
+        
     }
 
 

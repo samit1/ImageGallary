@@ -13,7 +13,7 @@ protocol GalleryListDelegate : class {
     func recentlyDeletedGalleriesDidChange(recentlyDeleted : galleries)
 }
 
-struct GalleriesModel  {
+class GalleriesModel  {
     
     private var viewableGalleries = galleries().uniquified {didSet {delegate?.viewableGalleriesDidChange(viewableGalleries: viewableGalleries) }}
     private var recentltyDeletedGalleries = galleries().uniquified {didSet { delegate?.recentlyDeletedGalleriesDidChange(recentlyDeleted: recentltyDeletedGalleries)}}
@@ -38,7 +38,7 @@ struct GalleriesModel  {
     /// - parameter gallery : the gallary that should be deleted
     /// - NOTE: The gallary is first checked to see if it can be removed from a viewable gallery
     /// it then checks to see if a gallery should be removed from a recently deleted gallery
-    mutating func requestToDeleteGallary(gallary : ImageGallary ) {
+     func requestToDeleteGallary(gallary : ImageGallary ) {
         
         /// Check to see if gallery should be moved to recently deleted or removed from recently deleted
         if viewableGalleries.contains(gallary) {
@@ -51,7 +51,7 @@ struct GalleriesModel  {
         }
     }
     
-    mutating func requestNameUpdate(for gallaryItem: ImageGallary, with nameAfterChange: String) {
+     func requestNameUpdate(for gallaryItem: ImageGallary, with nameAfterChange: String) {
         
         if let gallaryIndex = viewableGalleries.index(of: gallaryItem) {
             viewableGalleries[gallaryIndex].galleryName = nameAfterChange
@@ -67,13 +67,13 @@ struct GalleriesModel  {
         viewableGalleries.append(newItem)    
     }
     
-    mutating func requestGallaryContentsUpdate(for gallary: ImageGallary) {
+     func requestGallaryContentsUpdate(for gallary: ImageGallary) {
         if let index = viewableGalleries.index(of: gallary) {
             viewableGalleries[index] = gallary
         }
     }
     
-    mutating func addGalary() {
+     func addGalary() {
         var newItem = ImageGallary()
         newItem.galleryName = "Title " + String(viewableGalleries.count + recentltyDeletedGalleries.count + 1)
         viewableGalleries.append(newItem)

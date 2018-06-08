@@ -19,6 +19,8 @@ class GallaryStoreItem  {
 }
 
 class GalleriesModel {
+
+    
     private var viewableGalleries = [GallaryStoreItem]().uniquified {didSet {delegate?.viewableGalleriesDidChange(viewableGalleries: viewableGalleries) }}
     private var recentltyDeletedGalleries = [GallaryStoreItem]().uniquified {didSet { delegate?.recentlyDeletedGalleriesDidChange(recentlyDeleted: recentltyDeletedGalleries)}}
     

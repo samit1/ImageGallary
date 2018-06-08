@@ -33,6 +33,8 @@ struct ImageItem : Equatable {
 
 typealias images = [ImageItem]
 struct ImageGallaryItem {
+    let galleryUUID = NSUUID().uuidString
+
     
     private (set) var gallery = images() {didSet {
         //gallery.forEach({print($0.description)})

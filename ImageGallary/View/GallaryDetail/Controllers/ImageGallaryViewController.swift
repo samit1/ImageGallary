@@ -7,27 +7,34 @@
 //
 
 import UIKit
+protocol ImageDetailDataDelegate : class {
+    func imageDetailWillDisappear(imageData: ImageGallaryItem)
+}
 
 class ImageGallaryViewController: UICollectionViewController {
     
-    
+    // MARK: Properties
     @IBOutlet var gallary: UICollectionView!
     
     var imageData = ImageGallaryItem()
-    
+    weak var delegate : ImageDetailDataDelegate?
     
     // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         gallary.dragDelegate = self
         gallary.dropDelegate = self
-        //baseURL = "https://placebear.com/g/640/48"
-        
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        delegate?.imageDetailWillDisappear(imageData: imageData)
+    }
+    
     var baseURL : String? {didSet {
         loadWithTest()
         }
     }
+    
     private func loadWithTest() {
         for x in 1...30 {
             guard baseURL != nil else {return}
@@ -57,9 +64,6 @@ class ImageGallaryViewController: UICollectionViewController {
         }
         return placeholder
     }
-    
-    
-    
 }
 
 // MARK: CollectionViewDropDelegate
@@ -106,8 +110,6 @@ extension ImageGallaryViewController : UICollectionViewDropDelegate {
                         }
                     }
                 })
-                
-                
             }
         }
     }
@@ -116,12 +118,8 @@ extension ImageGallaryViewController : UICollectionViewDropDelegate {
     /// Specify the type of data which can be dropped
     /// The data must be a URL and image
     func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
-        //print(session.canLoadObjects(ofClass: UIImage.self))
         return  session.canLoadObjects(ofClass: NSURL.self)
     }
-    
-    
-    
     
     func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
         let isSelf = (session.localDragSession?.localContext as? UICollectionView) == gallary
@@ -149,7 +147,6 @@ extension ImageGallaryViewController : UICollectionViewDragDelegate {
                 dragItems.append(dragItem)
             }
         }
-        
         return dragItems
     }
 }
@@ -158,12 +155,9 @@ extension ImageGallaryViewController : UICollectionViewDragDelegate {
 extension ImageGallaryViewController : UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         guard imageData.gallery.indices.contains(indexPath.item) else {return CGSize.zero}
-        
         let width = collectionView.bounds.width / 4
         let heightMultiple = imageData.gallery[indexPath.item].heightMultipleToWidth
         let height = heightMultiple != nil ?  width * CGFloat(heightMultiple!) : 0
-        
-        
         return CGSize(width: width, height: height)
     }
 }

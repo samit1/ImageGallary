@@ -17,7 +17,6 @@ class GallaryStoreViewController: UIViewController {
     private var gallaryModel = GalleriesModel()
     
     fileprivate var galleries = [GallaryStoreItem]() {didSet {
-        print(galleries.count)
         self.gallaryTable?.reloadData()
         }
     }
@@ -30,7 +29,7 @@ class GallaryStoreViewController: UIViewController {
         super.viewDidLoad()
         gallaryTable.delegate = self
         gallaryTable.dataSource = self
-        gallaryModel.delegate = self 
+        gallaryModel.delegate = self
     }
     
     override func didReceiveMemoryWarning() {
@@ -40,7 +39,6 @@ class GallaryStoreViewController: UIViewController {
     
     
     @IBAction func wasDoubleTapped(_ sender: UITapGestureRecognizer) {
-        print("hey")
         if let cellTapped  = gallaryTable.indexPathForSelectedRow {
             let cell = gallaryTable.cellForRow(at: cellTapped)
             if let gallaryCell = cell as? GallaryNameTableViewCell {
@@ -88,7 +86,6 @@ extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegat
         }
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("THIS WAS FUCKING SELECTED")
         let cell = gallaryTable.cellForRow(at: indexPath)
         performSegue(withIdentifier: "showGallaryDetail", sender: cell)
     }
@@ -106,6 +103,7 @@ extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegat
                         //destinationVC.imageData = galleries[cellSend?.item]
                         if galleries.indices.contains(cellSend.row) {
                             destinationVC.imageData = galleries[cellSend.row].gallaryContents
+                            destinationVC.delegate = self
                         }
                     }
                 }
@@ -140,9 +138,15 @@ extension GallaryStoreViewController : UserInputDelegate {
         }
         
     }
-    
 }
 
+extension GallaryStoreViewController : ImageDetailDataDelegate {
+    func imageDetailWillDisappear(imageData: ImageGallaryItem) {
+        
+    }
+    
+    
+}
 
 
 

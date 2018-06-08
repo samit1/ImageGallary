@@ -13,14 +13,14 @@ protocol GalleryListDelegate : class {
     func recentlyDeletedGalleriesDidChange(recentlyDeleted : galleries)
 }
 
-class GalleriesModel  {
+struct GalleriesModel  {
     
     private var viewableGalleries = galleries().uniquified {didSet {delegate?.viewableGalleriesDidChange(viewableGalleries: viewableGalleries) }}
     private var recentltyDeletedGalleries = galleries().uniquified {didSet { delegate?.recentlyDeletedGalleriesDidChange(recentlyDeleted: recentltyDeletedGalleries)}}
     
     init() {
         if viewableGalleries.isEmpty {
-           // addGalary()
+            addGalary()
         }
     }
     
@@ -38,7 +38,7 @@ class GalleriesModel  {
     /// - parameter gallery : the gallary that should be deleted
     /// - NOTE: The gallary is first checked to see if it can be removed from a viewable gallery
     /// it then checks to see if a gallery should be removed from a recently deleted gallery
-    func requestToDeleteGallary(gallary : ImageGallary ) {
+    mutating func requestToDeleteGallary(gallary : ImageGallary ) {
         
         /// Check to see if gallery should be moved to recently deleted or removed from recently deleted
         if viewableGalleries.contains(gallary) {
@@ -51,7 +51,7 @@ class GalleriesModel  {
         }
     }
     
-    func requestNameUpdate(for gallaryItem: ImageGallary, with nameAfterChange: String) {
+    mutating func requestNameUpdate(for gallaryItem: ImageGallary, with nameAfterChange: String) {
         
         if let gallaryIndex = viewableGalleries.index(of: gallaryItem) {
             viewableGalleries[gallaryIndex].galleryName = nameAfterChange
@@ -62,19 +62,20 @@ class GalleriesModel  {
             recentltyDeletedGalleries[gallaryIndex].galleryName = nameAfterChange
             return
         }
-        let newItem = ImageGallary()
+        var newItem = ImageGallary()
         newItem.galleryName = nameAfterChange
         viewableGalleries.append(newItem)    
     }
     
-    func requestGallaryContentsUpdate(for gallary: ImageGallary) {
+    mutating func requestGallaryContentsUpdate(for gallary: ImageGallary) {
         if let index = viewableGalleries.index(of: gallary) {
             viewableGalleries[index] = gallary
         }
     }
     
-    func addGalary() {
-        let newItem = ImageGallary()
+    mutating func addGalary() {
+        var newItem = ImageGallary()
+        newItem.galleryName = "Title " + String(viewableGalleries.count + recentltyDeletedGalleries.count + 1)
         viewableGalleries.append(newItem)
     }
 }

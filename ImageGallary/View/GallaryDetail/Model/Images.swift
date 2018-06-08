@@ -32,7 +32,7 @@ struct ImageItem : Equatable {
 }
 
 typealias images = [ImageItem]
-class ImageGallary : Equatable {
+struct ImageGallary : Equatable {
 
     var galleryName = ""
     let galleryUUID = NSUUID().uuidString
@@ -43,7 +43,7 @@ class ImageGallary : Equatable {
         }
     }
     
-    func insert(item: ImageItem, at index: Int) {
+    mutating func insert(item: ImageItem, at index: Int) {
         guard gallery.indices.contains(index) else {
             appendToEnd(item: item)
             return
@@ -53,17 +53,17 @@ class ImageGallary : Equatable {
         gallery.insert(item, at: index)
     }
     
-    func appendToEnd(item: ImageItem) {
+    mutating func appendToEnd(item: ImageItem) {
         guard !gallery.contains(item) else {return}
         gallery.append(item)
     }
     
-     func removeAt(at index: Int) {
+    mutating func removeAt(at index: Int) {
         guard gallery.indices.contains(index) else {return}
         gallery.remove(at: index)
     }
     
-     func swapIndices(itemIndex1 : Int, itemIndex2: Int) {
+    mutating func swapIndices(itemIndex1 : Int, itemIndex2: Int) {
         guard gallery.indices.contains(itemIndex1)
             && gallery.indices.contains(itemIndex2) && itemIndex1 != itemIndex2 else {return}
         

@@ -105,7 +105,8 @@ extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegat
                         //destinationVC.imageData = galleries[cellSend?.item]
                         if galleries.indices.contains(cellSend.row) {
                             destinationVC.imageData = galleries[cellSend.row]
-                            //destinationVC.delegate = self
+                            destinationVC.delegate = self
+                            print("segue happened")
                         }
                     }
                 }
@@ -143,13 +144,13 @@ extension GallaryStoreViewController : UserInputDelegate {
     }
 }
 
-//extension GallaryStoreViewController : ImageDetailDataDelegate {
-//    func imageDetailWillDisappear(imageData: ImageGallary?) {
-//        //gallaryModel.requestGallaryContentsUpdate(for: imageData)
-//    }
-//
-//
-//}
+extension GallaryStoreViewController : ImageDetailDataDelegate {
+    func imageDetailWillDisappear(imageData: ImageGallary) {
+        gallaryModel.requestGallaryContentsUpdate(for: imageData)
+    }
+
+
+}
 
 
 

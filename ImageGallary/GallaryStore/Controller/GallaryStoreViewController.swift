@@ -12,15 +12,15 @@ class GallaryStoreViewController: UIViewController {
     
     @IBOutlet weak var gallaryTable: UITableView!
     @IBAction func addGallaryTap(_ sender: UIBarButtonItem) {
-        galleries.append(GallaryStoreItem())
+        gallaryModel.addGalary()
     }
     private var gallaryModel = GalleriesModel()
     
-    fileprivate var galleries = [GallaryStoreItem]() {didSet {
+    fileprivate var galleries = [ImageGallary]() {didSet {
         self.gallaryTable?.reloadData()
         }
     }
-    fileprivate var recentlyDeletedGalleries = [GallaryStoreItem]() {didSet {
+    fileprivate var recentlyDeletedGalleries = [ImageGallary]() {didSet {
         self.gallaryTable?.reloadData()
         }
     }
@@ -56,7 +56,7 @@ extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegat
         if indexPath.section == 0 {
             if let cell = tableView.dequeueReusableCell(withIdentifier: "GallaryNameCell", for: indexPath) as? GallaryNameTableViewCell {
                 guard galleries.indices.contains(indexPath.row) else {return UITableViewCell()}
-                cell.textField.text = galleries[indexPath.row].gallaryname ?? ""
+                cell.textField.text = galleries[indexPath.row].galleryName 
                 cell.delegate = self
                 cell.isEditing = false
                 return cell
@@ -85,10 +85,12 @@ extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegat
             return 0
         }
     }
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = gallaryTable.cellForRow(at: indexPath)
-        performSegue(withIdentifier: "showGallaryDetail", sender: cell)
-    }
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        let cell = gallaryTable.cellForRow(at: indexPath)
+//        
+//        performSegue(withIdentifier: "showGallaryDetail", sender: cell)
+//        print("he")
+//    }
     
     // MARK: Segues
     
@@ -102,7 +104,7 @@ extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegat
                     if let destinationVC = segue.destination.contents as? ImageGallaryViewController {
                         //destinationVC.imageData = galleries[cellSend?.item]
                         if galleries.indices.contains(cellSend.row) {
-                            destinationVC.imageData = galleries[cellSend.row].gallaryContents
+                            destinationVC.imageData = galleries[cellSend.row]
                             destinationVC.delegate = self
                         }
                     }
@@ -130,6 +132,7 @@ extension GallaryStoreViewController : UserInputDelegate {
         
         switch indexPath.section {
         case 0:
+            //guard galleries.indices.contains(indexPath.row) else {return}
             gallaryModel.requestNameUpdate(for: galleries[indexPath.row], with: resulting)
         case 1:
             gallaryModel.requestNameUpdate(for: recentlyDeletedGalleries[indexPath.row], with: resulting)
@@ -141,8 +144,8 @@ extension GallaryStoreViewController : UserInputDelegate {
 }
 
 extension GallaryStoreViewController : ImageDetailDataDelegate {
-    func imageDetailWillDisappear(imageData: ImageGallaryItem) {
-        
+    func imageDetailWillDisappear(imageData: ImageGallary) {
+        //gallaryModel.requestGallaryContentsUpdate(for: imageData)
     }
     
     

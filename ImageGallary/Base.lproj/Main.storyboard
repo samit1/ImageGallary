@@ -87,7 +87,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X67-Yo-ZOw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1722" y="-807"/>
+            <point key="canvasLocation" x="395" y="-125"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="fLR-YW-9ye">
@@ -105,7 +105,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="G09-q9-01G" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="854" y="-807"/>
+            <point key="canvasLocation" x="-360" y="-125"/>
         </scene>
         <!--Gallary Store View Controller-->
         <scene sceneID="3xm-AF-Y1b">
@@ -132,9 +132,6 @@
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
-                                                    <connections>
-                                                        <segue destination="7cU-OJ-KPB" kind="showDetail" identifier="showGallaryDetail" id="xZX-J8-GWH"/>
-                                                    </connections>
                                                 </textField>
                                             </subviews>
                                             <constraints>
@@ -146,6 +143,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="textField" destination="M5Y-sb-EcU" id="NNO-Wa-yTX"/>
+                                            <segue destination="7cU-OJ-KPB" kind="showDetail" identifier="showGallaryDetail" id="DBZ-cb-DAB"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -182,7 +180,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="80.799999999999997" y="-114.69265367316342"/>
+            <point key="canvasLocation" x="-360" y="-905"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="h7r-3G-zVA">
@@ -200,10 +198,10 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="m7X-TH-TzR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-778" y="-115"/>
+            <point key="canvasLocation" x="-1114" y="-843"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="cxM-nX-zWb"/>
+        <segue reference="DBZ-cb-DAB"/>
     </inferredMetricsTieBreakers>
 </document>

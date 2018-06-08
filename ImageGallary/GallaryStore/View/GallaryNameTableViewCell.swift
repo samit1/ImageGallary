@@ -49,7 +49,6 @@ extension GallaryNameTableViewCell : UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         if let text = textField.text {
             isEditing = false
-            
             delegate?.userUpdatedTextFieldValue(with: text, sender: self )
         }
     }

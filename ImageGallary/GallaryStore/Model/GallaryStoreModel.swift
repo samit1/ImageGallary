@@ -7,22 +7,23 @@
 //
 
 import Foundation
-typealias galleries = [GallaryStoreItem]
+typealias galleries = [ImageGallary]
 protocol GalleryListDelegate : class {
     func viewableGalleriesDidChange(viewableGalleries : galleries)
     func recentlyDeletedGalleriesDidChange(recentlyDeleted : galleries)
 }
 
-class GallaryStoreItem  {
-    var gallaryname : String?
-    var gallaryContents = ImageGallaryItem()
-}
-
-class GalleriesModel {
-
+class GalleriesModel  {
     
-    private var viewableGalleries = [GallaryStoreItem]().uniquified {didSet {delegate?.viewableGalleriesDidChange(viewableGalleries: viewableGalleries) }}
-    private var recentltyDeletedGalleries = [GallaryStoreItem]().uniquified {didSet { delegate?.recentlyDeletedGalleriesDidChange(recentlyDeleted: recentltyDeletedGalleries)}}
+    private var viewableGalleries = galleries().uniquified {didSet {delegate?.viewableGalleriesDidChange(viewableGalleries: viewableGalleries) }}
+    private var recentltyDeletedGalleries = galleries().uniquified {didSet { delegate?.recentlyDeletedGalleriesDidChange(recentlyDeleted: recentltyDeletedGalleries)}}
+    
+    init() {
+        if viewableGalleries.isEmpty {
+           // addGalary()
+        }
+    }
+    
     
     weak var delegate : GalleryListDelegate?
     
@@ -37,7 +38,7 @@ class GalleriesModel {
     /// - parameter gallery : the gallary that should be deleted
     /// - NOTE: The gallary is first checked to see if it can be removed from a viewable gallery
     /// it then checks to see if a gallery should be removed from a recently deleted gallery
-    func requestToDeleteGallary(gallary : GallaryStoreItem ) {
+    func requestToDeleteGallary(gallary : ImageGallary ) {
         
         /// Check to see if gallery should be moved to recently deleted or removed from recently deleted
         if viewableGalleries.contains(gallary) {
@@ -50,32 +51,33 @@ class GalleriesModel {
         }
     }
     
-    func requestNameUpdate(for gallaryItem: GallaryStoreItem, with nameAfterChange: String) {
+    func requestNameUpdate(for gallaryItem: ImageGallary, with nameAfterChange: String) {
         
         if let gallaryIndex = viewableGalleries.index(of: gallaryItem) {
-            viewableGalleries[gallaryIndex].gallaryname = nameAfterChange
+            viewableGalleries[gallaryIndex].galleryName = nameAfterChange
             return
         }
         
         if let gallaryIndex = recentltyDeletedGalleries.index(of: gallaryItem) {
-            recentltyDeletedGalleries[gallaryIndex].gallaryname = nameAfterChange
+            recentltyDeletedGalleries[gallaryIndex].galleryName = nameAfterChange
             return
         }
-        let newItem = GallaryStoreItem()
-        newItem.gallaryname = nameAfterChange
+        let newItem = ImageGallary()
+        newItem.galleryName = nameAfterChange
         viewableGalleries.append(newItem)    
     }
-}
-
-
-/// GallaryStoreItem is considered equatable based on if the non-nil names do not equal each other
-extension GallaryStoreItem : Equatable {
-    static func == (lhs: GallaryStoreItem, rhs: GallaryStoreItem) -> Bool {
-        guard lhs.gallaryname != nil && rhs.gallaryname != nil else {return false}
-        if lhs.gallaryname == rhs.gallaryname {return true}
-        return false
+    
+    func requestGallaryContentsUpdate(for gallary: ImageGallary) {
+        if let index = viewableGalleries.index(of: gallary) {
+            viewableGalleries[index] = gallary
+        }
     }
     
-    
+    func addGalary() {
+        let newItem = ImageGallary()
+        viewableGalleries.append(newItem)
+    }
 }
+    
+
 

@@ -8,7 +8,7 @@
 
 import UIKit
 protocol ImageDetailDataDelegate : class {
-    func imageDetailWillDisappear(imageData: ImageGallaryItem)
+    func imageDetailWillDisappear(imageData: ImageGallary)
 }
 
 class ImageGallaryViewController: UICollectionViewController {
@@ -16,7 +16,7 @@ class ImageGallaryViewController: UICollectionViewController {
     // MARK: Properties
     @IBOutlet var gallary: UICollectionView!
     
-    var imageData = ImageGallaryItem()
+     var imageData = ImageGallary()
     weak var delegate : ImageDetailDataDelegate?
     
     // MARK: Lifecycle

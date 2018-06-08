@@ -8,7 +8,7 @@
 
 import UIKit
 protocol ImageDetailDataDelegate : class {
-    func imageDetailWillDisappear(imageData: ImageGallary)
+    func imageDetailWillDisappear(imageData: ImageGallary?)
 }
 
 class ImageGallaryViewController: UICollectionViewController {
@@ -16,7 +16,7 @@ class ImageGallaryViewController: UICollectionViewController {
     // MARK: Properties
     @IBOutlet var gallary: UICollectionView!
     
-     var imageData = ImageGallary()
+    weak var imageData = ImageGallary()
     weak var delegate : ImageDetailDataDelegate?
     
     // MARK: Lifecycle
@@ -27,6 +27,7 @@ class ImageGallaryViewController: UICollectionViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        
         delegate?.imageDetailWillDisappear(imageData: imageData)
     }
     
@@ -40,7 +41,7 @@ class ImageGallaryViewController: UICollectionViewController {
             guard baseURL != nil else {return}
             let url = baseURL! + String(x)
             let data = ImageItem(heightMultipleToWidth: 1, url: URL(string: url)! )
-            imageData.appendToEnd(item: data)
+            imageData?.appendToEnd(item: data)
         }
     }
     
@@ -49,18 +50,20 @@ class ImageGallaryViewController: UICollectionViewController {
     // MARK: CollectionView Rows and Columns
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return imageData.gallery.count  
+        return imageData?.gallery.count ?? 0
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let placeholder = gallary.dequeueReusableCell(withReuseIdentifier: "Placeholder", for: indexPath)
+        if let imageData = imageData {
         guard imageData.gallery.indices.contains(indexPath.item) else {return placeholder}
         guard let url = imageData.gallery[indexPath.item].url else {return placeholder}
         
         if let cell = gallary.dequeueReusableCell(withReuseIdentifier: "DraggedImage", for: indexPath) as? ImageCollectionViewCell {
             cell.url = url
             return cell
+        }
         }
         return placeholder
     }
@@ -81,7 +84,7 @@ extension ImageGallaryViewController : UICollectionViewDropDelegate {
         for item in coordinator.items {
             if let beginIndex = item.sourceIndexPath {
                 collectionView.performBatchUpdates({
-                    imageData.swapIndices(itemIndex1: beginIndex.item, itemIndex2: destinationIndexPath.item)
+                    imageData?.swapIndices(itemIndex1: beginIndex.item, itemIndex2: destinationIndexPath.item)
                 }, completion: {(completion) in
                     collectionView.reloadItems(at: [beginIndex, destinationIndexPath])
                 })
@@ -103,7 +106,7 @@ extension ImageGallaryViewController : UICollectionViewDropDelegate {
                                 let urlImage = url.imageURL
                                 let imgItem = ImageItem(heightMultipleToWidth: 1.0, url: urlImage)
                                 self.gallary.reloadData()
-                                self.imageData.insert(item: imgItem, at: destinationIndexPath.item)
+                                self.imageData?.insert(item: imgItem, at: destinationIndexPath.item)
                             })
                         } else {
                             placeholderContext.deletePlaceholder()
@@ -131,6 +134,7 @@ extension ImageGallaryViewController : UICollectionViewDropDelegate {
 
 extension ImageGallaryViewController : UICollectionViewDragDelegate {
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        if let imageData = imageData {
         guard imageData.gallery.indices.contains(indexPath.item) else {return []}
         var dragItems = [UIDragItem]()
         
@@ -147,19 +151,27 @@ extension ImageGallaryViewController : UICollectionViewDragDelegate {
                 dragItems.append(dragItem)
             }
         }
+    
         return dragItems
+    }
+        return []
     }
 }
 
 // MARK: CollectionViewFlowLayoutDelegate
 extension ImageGallaryViewController : UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if let imageData = imageData {
         guard imageData.gallery.indices.contains(indexPath.item) else {return CGSize.zero}
         let width = collectionView.bounds.width / 4
         let heightMultiple = imageData.gallery[indexPath.item].heightMultipleToWidth
         let height = heightMultiple != nil ?  width * CGFloat(heightMultiple!) : 0
         return CGSize(width: width, height: height)
+            
     }
+        return CGSize.zero
+    }
+    
 }
 
 

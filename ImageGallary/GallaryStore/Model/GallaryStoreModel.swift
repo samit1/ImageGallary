@@ -15,7 +15,7 @@ protocol GalleryListDelegate : class {
 
 class GallaryStoreItem  {
     var gallaryname : String?
-    var gallaryContents : ImageGallaryItem?
+    var gallaryContents = ImageGallaryItem()
 }
 
 class GalleriesModel {

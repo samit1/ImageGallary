@@ -40,7 +40,11 @@ struct ImageGallaryItem {
     }
     
     mutating func insert(item: ImageItem, at index: Int) {
-        guard gallery.indices.contains(index) else {return}
+        guard gallery.indices.contains(index) else {
+            appendToEnd(item: item)
+            return
+            
+        }
         
         gallery.insert(item, at: index)
     }

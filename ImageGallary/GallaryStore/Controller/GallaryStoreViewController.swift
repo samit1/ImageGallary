@@ -94,27 +94,21 @@ extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegat
     }
     
     // MARK: Segues
-
+    
     // #TODO : Add check for sender
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         guard let cell = sender as? GallaryNameTableViewCell else {return}
         if let cellSend = gallaryTable.indexPath(for: cell) {
-        if let identifier = segue.identifier {
-            if identifier == "showGallaryDetail" {
-                if let destinationVC = segue.destination.contents as? ImageGallaryViewController {
-                    //destinationVC.imageData = galleries[cellSend?.item]
-                    
-                    if cell.textField.text == "Cat" {
-                        destinationVC.baseURL = "http://placekitten.com/g/200/30"
+            if let identifier = segue.identifier {
+                if identifier == "showGallaryDetail" {
+                    if let destinationVC = segue.destination.contents as? ImageGallaryViewController {
+                        //destinationVC.imageData = galleries[cellSend?.item]
+                        if galleries.indices.contains(cellSend.row) {
+                            destinationVC.imageData = galleries[cellSend.row].gallaryContents
+                        }
                     }
-                    
-                    if cell.textField.text == "Bear" {
-                        destinationVC.baseURL = "https://placebear.com/g/640/48"
-                    }
-                    
                 }
-            }
             }
         }
     }

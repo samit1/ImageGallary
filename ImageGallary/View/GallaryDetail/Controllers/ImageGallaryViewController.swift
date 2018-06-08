@@ -21,7 +21,7 @@ class ImageGallaryViewController: UICollectionViewController {
         super.viewDidLoad()
         gallary.dragDelegate = self
         gallary.dropDelegate = self
-        
+        //baseURL = "https://placebear.com/g/640/48"
         
     }
     var baseURL : String? {didSet {
@@ -42,12 +42,13 @@ class ImageGallaryViewController: UICollectionViewController {
     // MARK: CollectionView Rows and Columns
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return imageData.gallery.count
+        return imageData.gallery.count  
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let placeholder = gallary.dequeueReusableCell(withReuseIdentifier: "Placeholder", for: indexPath)
+        guard imageData.gallery.indices.contains(indexPath.item) else {return placeholder}
         guard let url = imageData.gallery[indexPath.item].url else {return placeholder}
         
         if let cell = gallary.dequeueReusableCell(withReuseIdentifier: "DraggedImage", for: indexPath) as? ImageCollectionViewCell {
@@ -71,7 +72,8 @@ extension ImageGallaryViewController : UICollectionViewDropDelegate {
         /// or the drop is from an external source.
         
         /// If the drag and drop if from the collectionView, then we notify our model that there was a rearrangement.
-        guard let destinationIndexPath = coordinator.destinationIndexPath else {return}
+        var destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(row: 0, section: 0)
+        
         for item in coordinator.items {
             if let beginIndex = item.sourceIndexPath {
                 collectionView.performBatchUpdates({
@@ -96,6 +98,7 @@ extension ImageGallaryViewController : UICollectionViewDropDelegate {
                             placeholderContext.commitInsertion(dataSourceUpdates: {[unowned self] insertionIndexPath in
                                 let urlImage = url.imageURL
                                 let imgItem = ImageItem(heightMultipleToWidth: 1.0, url: urlImage)
+                                self.gallary.reloadData()
                                 self.imageData.insert(item: imgItem, at: destinationIndexPath.item)
                             })
                         } else {

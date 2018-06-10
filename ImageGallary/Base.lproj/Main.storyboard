@@ -45,7 +45,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="mIN-Sr-9o7" customClass="ImageLoader" customModule="ImageGallary" customModuleProvider="target">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="50" placeholderIntrinsicHeight="50" translatesAutoresizingMaskIntoConstraints="NO" id="mIN-Sr-9o7" customClass="ImageLoader" customModule="ImageGallary" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="0.0" width="0.0" height="50"/>
                                         </imageView>
                                         <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="x5b-kZ-0pq">
@@ -53,6 +53,7 @@
                                         </activityIndicatorView>
                                     </subviews>
                                 </view>
+                                <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstItem="x5b-kZ-0pq" firstAttribute="centerY" secondItem="dUd-r7-xKl" secondAttribute="centerY" id="9F2-E7-ceW"/>
                                     <constraint firstItem="x5b-kZ-0pq" firstAttribute="centerX" secondItem="dUd-r7-xKl" secondAttribute="centerX" id="9tf-Uw-REq"/>
@@ -64,6 +65,7 @@
                                 <connections>
                                     <outlet property="activityIndicator" destination="x5b-kZ-0pq" id="AUF-Yu-2ub"/>
                                     <outlet property="imageView" destination="mIN-Sr-9o7" id="GCH-dr-0ad"/>
+                                    <outletCollection property="gestureRecognizers" destination="5H0-Cb-9zG" appends="YES" id="gfg-io-AFE"/>
                                 </connections>
                             </collectionViewCell>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" reuseIdentifier="Placeholder" id="n5G-lw-2vZ">
@@ -83,11 +85,60 @@
                     <navigationItem key="navigationItem" id="MMl-It-LWe"/>
                     <connections>
                         <outlet property="gallary" destination="bbw-uv-tO8" id="ykD-uV-iIa"/>
+                        <segue destination="jgH-b4-K9p" kind="show" identifier="showImage" id="lvI-3E-ar9"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X67-Yo-ZOw" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer numberOfTapsRequired="2" id="5H0-Cb-9zG">
+                    <connections>
+                        <action selector="wasDoubleTapped:" destination="Qbe-76-JmD" id="BQW-hG-miY"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="395" y="-125"/>
+        </scene>
+        <!--Image View Controller-->
+        <scene sceneID="gl5-IU-bGn">
+            <objects>
+                <viewController id="jgH-b4-K9p" customClass="ImageViewController" customModule="ImageGallary" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Ftd-Vr-13R">
+                        <rect key="frame" x="0.0" y="0.0" width="990.5" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jz5-T5-CDP">
+                                <rect key="frame" x="0.0" y="64" width="990.5" height="960"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="bxV-oA-ZMi" customClass="ImageLoader" customModule="ImageGallary" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="990.5" height="960"/>
+                                    </imageView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="bxV-oA-ZMi" firstAttribute="leading" secondItem="Jz5-T5-CDP" secondAttribute="leading" id="B2p-fk-HJU"/>
+                                    <constraint firstAttribute="trailing" secondItem="bxV-oA-ZMi" secondAttribute="trailing" id="DSm-Ts-WS3"/>
+                                    <constraint firstItem="bxV-oA-ZMi" firstAttribute="top" secondItem="Jz5-T5-CDP" secondAttribute="top" id="afp-gN-xwM"/>
+                                    <constraint firstItem="bxV-oA-ZMi" firstAttribute="centerY" secondItem="Jz5-T5-CDP" secondAttribute="centerY" id="eEs-LE-VI0"/>
+                                    <constraint firstAttribute="bottom" secondItem="bxV-oA-ZMi" secondAttribute="bottom" id="eSt-ab-tZa"/>
+                                    <constraint firstItem="bxV-oA-ZMi" firstAttribute="centerX" secondItem="Jz5-T5-CDP" secondAttribute="centerX" id="tDq-eO-5HK"/>
+                                </constraints>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Jz5-T5-CDP" firstAttribute="leading" secondItem="Gsr-sr-qyL" secondAttribute="leading" id="AIp-Pd-z6c"/>
+                            <constraint firstItem="Jz5-T5-CDP" firstAttribute="top" secondItem="Gsr-sr-qyL" secondAttribute="top" id="o3i-jK-Qaz"/>
+                            <constraint firstItem="Gsr-sr-qyL" firstAttribute="trailing" secondItem="Jz5-T5-CDP" secondAttribute="trailing" id="qpu-r9-e6o"/>
+                            <constraint firstItem="Gsr-sr-qyL" firstAttribute="bottom" secondItem="Jz5-T5-CDP" secondAttribute="bottom" id="uVx-Hz-Zzu"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Gsr-sr-qyL"/>
+                    </view>
+                    <connections>
+                        <outlet property="imageView" destination="bxV-oA-ZMi" id="Nyg-M7-5Zx"/>
+                        <outlet property="imgScrollView" destination="Jz5-T5-CDP" id="OzP-kI-YgT"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GCg-jL-ZMc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1152" y="-125"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="fLR-YW-9ye">
@@ -194,6 +245,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="LS7-m0-LqZ"/>
+        <segue reference="cxM-nX-zWb"/>
     </inferredMetricsTieBreakers>
 </document>

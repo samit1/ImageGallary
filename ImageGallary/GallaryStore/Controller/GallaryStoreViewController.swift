@@ -112,6 +112,7 @@ class GallaryStoreViewController: UIViewController, UIGestureRecognizerDelegate 
                 if identifier == SegueIdentifier.showGallaryDetail {
                     if let destinationVC = segue.destination.contents as? ImageGallaryViewController {
                         destinationVC.imageData = allGalleries[cellSent.section][cellSent.row]
+                        destinationVC.gallaryStore = gallaryModel
                     }
                 }
             }

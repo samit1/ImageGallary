@@ -13,7 +13,19 @@ class ImageGallaryViewController: UICollectionViewController {
     // MARK: Properties
     @IBOutlet var gallary: UICollectionView!
     
-     var imageData = ImageGallary()
+    var gallaryStore : GalleriesModel? {
+        didSet {
+            gallary?.reloadData()
+        }
+    }
+    
+    /// Images displayed on screen (if any)
+    var imageData = ImageGallary() {
+        didSet {
+            gallaryStore?.requestGallaryContentsUpdate(for: imageData)
+        }
+    }
+    
     
     // MARK: Lifecycle
     override func viewDidLoad() {
@@ -59,7 +71,40 @@ class ImageGallaryViewController: UICollectionViewController {
         
         return placeholder
     }
+    
+    // MARK: Gestures
+    
+    @IBAction func wasDoubleTapped(_ sender: UITapGestureRecognizer) {
+        if sender.state == .ended {
+            let tapLocation = sender.location(in: self.gallary)
+            if let tapIndexPath = self.gallary.indexPathForItem(at: tapLocation) {
+                if let tappedItem = self.gallary.cellForItem(at: tapIndexPath) as? ImageCollectionViewCell {
+                    performSegue(withIdentifier: SegueIdentifier.showImage, sender: tappedItem)
+                }
+            }
+            
+        }
+    }
+    
+    //MARK : Segue
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let sender = sender as? ImageCollectionViewCell else {return}
+        
+        if let path = gallary.indexPath(for: sender) {
+            if let identifier = segue.identifier {
+                if identifier == SegueIdentifier.showImage {
+                    if let destinationVC = segue.destination.contents as? ImageViewController {
+                        
+                        destinationVC.imgURL = imageData.gallery[path.row].url
+                    }
+                }
+            }
+            
+        }
+    }
+    
 }
+
 
 // MARK: CollectionViewDropDelegate
 
@@ -99,6 +144,7 @@ extension ImageGallaryViewController : UICollectionViewDropDelegate {
                                 let imgItem = ImageItem(heightMultipleToWidth: 1.0, url: urlImage)
                                 self.gallary.reloadData()
                                 self.imageData.insert(item: imgItem, at: destinationIndexPath.item)
+                                
                             })
                         } else {
                             placeholderContext.deletePlaceholder()
@@ -142,9 +188,9 @@ extension ImageGallaryViewController : UICollectionViewDragDelegate {
                 dragItems.append(dragItem)
             }
         }
-    
+        
         return dragItems
-
+        
     }
 }
 
@@ -156,8 +202,8 @@ extension ImageGallaryViewController : UICollectionViewDelegateFlowLayout {
         let heightMultiple = imageData.gallery[indexPath.item].heightMultipleToWidth
         let height = heightMultiple != nil ?  width * CGFloat(heightMultiple!) : 0
         return CGSize(width: width, height: height)
-            
-        }
+        
+    }
     
 }
 
@@ -169,6 +215,8 @@ extension ImageGallaryViewController : UIDropInteractionDelegate {
     }
 }
 
-
-
+// MARK: Constants
+private struct SegueIdentifier {
+    static let showImage = "showImage"
+}
 

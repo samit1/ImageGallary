@@ -65,7 +65,6 @@
                                 <connections>
                                     <outlet property="activityIndicator" destination="x5b-kZ-0pq" id="AUF-Yu-2ub"/>
                                     <outlet property="imageView" destination="mIN-Sr-9o7" id="GCH-dr-0ad"/>
-                                    <outletCollection property="gestureRecognizers" destination="5H0-Cb-9zG" appends="YES" id="gfg-io-AFE"/>
                                 </connections>
                             </collectionViewCell>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" reuseIdentifier="Placeholder" id="n5G-lw-2vZ">
@@ -89,11 +88,7 @@
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X67-Yo-ZOw" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer numberOfTapsRequired="2" id="5H0-Cb-9zG">
-                    <connections>
-                        <action selector="wasDoubleTapped:" destination="Qbe-76-JmD" id="BQW-hG-miY"/>
-                    </connections>
-                </tapGestureRecognizer>
+                <tapGestureRecognizer numberOfTapsRequired="2" id="5H0-Cb-9zG"/>
             </objects>
             <point key="canvasLocation" x="395" y="-125"/>
         </scene>

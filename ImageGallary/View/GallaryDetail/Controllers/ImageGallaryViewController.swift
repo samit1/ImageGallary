@@ -66,6 +66,7 @@ class ImageGallaryViewController: UICollectionViewController {
         
         if let cell = gallary.dequeueReusableCell(withReuseIdentifier: "DraggedImage", for: indexPath) as? ImageCollectionViewCell {
             cell.url = url
+            addDoubleTapGesture(to: cell)
             return cell
         }
         
@@ -74,7 +75,13 @@ class ImageGallaryViewController: UICollectionViewController {
     
     // MARK: Gestures
     
-    @IBAction func wasDoubleTapped(_ sender: UITapGestureRecognizer) {
+    func addDoubleTapGesture(to cell: ImageCollectionViewCell) {
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(wasDoubleTapped))
+        gesture.numberOfTapsRequired = 2
+        cell.addGestureRecognizer(gesture)
+    }
+    
+    @objc func wasDoubleTapped(_ sender: UITapGestureRecognizer) {
         if sender.state == .ended {
             let tapLocation = sender.location(in: self.gallary)
             if let tapIndexPath = self.gallary.indexPathForItem(at: tapLocation) {

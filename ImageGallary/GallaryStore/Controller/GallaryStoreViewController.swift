@@ -25,18 +25,23 @@ class GallaryStoreViewController: UIViewController {
         }
     }
     
+    fileprivate var allGalleries : [[ImageGallary]] {
+        return [galleries, recentlyDeletedGalleries]
+    }
+    
+    private var lastSelectedPath : IndexPath?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         gallaryTable.delegate = self
         gallaryTable.dataSource = self
         gallaryModel.delegate = self
+        setupTable()
     }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    private func setupTable() {
+        gallaryModel.requestViewableGalleries()
+        gallaryModel.requestRecentlyDeletedGallries()
     }
-    
     
     @IBAction func wasDoubleTapped(_ sender: UITapGestureRecognizer) {
         if let cellTapped  = gallaryTable.indexPathForSelectedRow {
@@ -52,68 +57,70 @@ class GallaryStoreViewController: UIViewController {
 extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        /// Section 0 is are the galleries
-        if indexPath.section == 0 {
-            if let cell = tableView.dequeueReusableCell(withIdentifier: "GallaryNameCell", for: indexPath) as? GallaryNameTableViewCell {
-                guard galleries.indices.contains(indexPath.row) else {return UITableViewCell()}
-                cell.textField.text = galleries[indexPath.row].galleryName 
-                cell.delegate = self
-                //cell.isEditing = false
-                return cell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "GallaryNameCell", for: indexPath)
+            if let galleryCell = cell as? GallaryNameTableViewCell {
+                galleryCell.textField.text = allGalleries[indexPath.section][indexPath.row].galleryName
+                galleryCell.delegate = self
+                galleryCell.isEditing = false
             }
-        }
-        return UITableViewCell()
+        
+        return cell
+    
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        
-        /// Return the number of items with > 0
-        //let viewable = galleries.count > 0 ? 1 : 0
-        //let deleted = recentlyDeletedGalleries.count > 0 ? 1 : 0
-        
-        return 2
+        return allGalleries.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        switch section {
-        case 0:
-            return galleries.count
-        case 1:
-            return recentlyDeletedGalleries.count
-        default:
-            return 0
+        
+        return allGalleries[section].count
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let last = lastSelectedPath, last != indexPath {
+            if  let cell = gallaryTable.cellForRow(at: last) as? GallaryNameTableViewCell {
+                cell.isEditing = false
+            }
+        }
+        lastSelectedPath = indexPath
+//        performSegue(withIdentifier: "showGallaryDetail", sender: cell)
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            gallaryModel.requestToDeleteGallary(gallary: allGalleries[indexPath.section][indexPath.row])
         }
     }
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let cell = gallaryTable.cellForRow(at: indexPath)
-//        
-//        performSegue(withIdentifier: "showGallaryDetail", sender: cell)
-//        print("he")
-//    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 1 {
+            return "Recently Deleted"
+        } else {return nil}
+    }
     
     // MARK: Segues
     
     // #TODO : Add check for sender
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        guard let cell = sender as? GallaryNameTableViewCell else {return}
-        if let cellSend = gallaryTable.indexPath(for: cell) {
-            if let identifier = segue.identifier {
-                if identifier == "showGallaryDetail" {
-                    if let destinationVC = segue.destination.contents as? ImageGallaryViewController {
-                        //destinationVC.imageData = galleries[cellSend?.item]
-                        if galleries.indices.contains(cellSend.row) {
-                            destinationVC.imageData = galleries[cellSend.row]
-                            destinationVC.delegate = self
-                           // cell.isEditing = false
-                            print("segue happened")
-                        }
-                    }
-                }
-            }
-        }
-    }
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//
+//        guard let cell = sender as? GallaryNameTableViewCell else {return}
+//        if let cellSend = gallaryTable.indexPath(for: cell) {
+//            if let identifier = segue.identifier {
+//                if identifier == "showGallaryDetail" {
+//                    if let destinationVC = segue.destination.contents as? ImageGallaryViewController {
+//                        //destinationVC.imageData = galleries[cellSend?.item]
+//                        if galleries.indices.contains(cellSend.row) {
+//                            destinationVC.imageData = galleries[cellSend.row]
+//                            destinationVC.delegate = self
+//                           // cell.isEditing = false
+//                            print("segue happened")
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 }
 
 extension GallaryStoreViewController : GalleryListDelegate {
@@ -132,14 +139,8 @@ extension GallaryStoreViewController : UserInputDelegate {
     func userUpdatedTextFieldValue(with resulting: String, sender: GallaryNameTableViewCell) {
         guard let indexPath = self.gallaryTable.indexPath(for: sender) else {return}
         
-        switch indexPath.section {
-        case 0:
-            gallaryModel.requestNameUpdate(for: galleries[indexPath.row], with: resulting)
-        case 1:
-            gallaryModel.requestNameUpdate(for: recentlyDeletedGalleries[indexPath.row], with: resulting)
-        default :
-            return
-        }
+        gallaryModel.requestNameUpdate(for: allGalleries[indexPath.section][indexPath.row], with: resulting)
+        
         
     }
 }

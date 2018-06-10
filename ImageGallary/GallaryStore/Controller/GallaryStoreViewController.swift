@@ -17,10 +17,12 @@ class GallaryStoreViewController: UIViewController {
     private var gallaryModel = GalleriesModel()
     
     fileprivate var galleries = [ImageGallary]() {didSet {
+        
         self.gallaryTable?.reloadData()
         }
     }
     fileprivate var recentlyDeletedGalleries = [ImageGallary]() {didSet {
+        if recentlyDeletedGalleries.count == 0 && galleries.count == 0 {gallaryModel.addGalary()}
         self.gallaryTable?.reloadData()
         }
     }

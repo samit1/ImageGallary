@@ -7,9 +7,6 @@
 //
 
 import UIKit
-protocol ImageDetailDataDelegate : class {
-    func imageDetailWillDisappear(imageData: ImageGallary)
-}
 
 class ImageGallaryViewController: UICollectionViewController {
     
@@ -17,7 +14,6 @@ class ImageGallaryViewController: UICollectionViewController {
     @IBOutlet var gallary: UICollectionView!
     
      var imageData = ImageGallary()
-    weak var delegate : ImageDetailDataDelegate?
     
     // MARK: Lifecycle
     override func viewDidLoad() {
@@ -26,11 +22,6 @@ class ImageGallaryViewController: UICollectionViewController {
         gallary.dropDelegate = self
         
         self.title = imageData.galleryName
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        
-        delegate?.imageDetailWillDisappear(imageData: imageData)
     }
     
     var baseURL : String? {didSet {

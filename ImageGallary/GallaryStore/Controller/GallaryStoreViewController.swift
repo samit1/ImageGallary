@@ -10,39 +10,54 @@ import UIKit
 
 class GallaryStoreViewController: UIViewController, UIGestureRecognizerDelegate {
     
+    /// TableView of galleries
     @IBOutlet weak var gallaryTable: UITableView!
+    
+    /// Add a new gallary
     @IBAction func addGallaryTap(_ sender: UIBarButtonItem) {
-        gallaryModel.addGalary()
+        gallaryModel?.addGalary()
     }
-    private var gallaryModel = GalleriesModel()
     
+    /// The gallary store
+    var gallaryModel : GalleriesModel? {
+        didSet {
+            gallaryTable?.reloadData()
+        }
+    }
+    
+    /// The viewable galleries
     fileprivate var galleries = [ImageGallary]() {didSet {
-        
-        self.gallaryTable?.reloadData()
-        }
-    }
-    fileprivate var recentlyDeletedGalleries = [ImageGallary]() {didSet {
-        if recentlyDeletedGalleries.count == 0 && galleries.count == 0 {gallaryModel.addGalary()}
         self.gallaryTable?.reloadData()
         }
     }
     
+    /// Recently deleted galeries
+    fileprivate var recentlyDeletedGalleries = [ImageGallary]() {didSet {
+        if recentlyDeletedGalleries.count == 0 && galleries.count == 0 {gallaryModel?.addGalary()}
+        self.gallaryTable?.reloadData()
+        }
+    }
+    
+    /// Viewable galeries and recently deleted galleries.
     fileprivate var allGalleries : [[ImageGallary]] {
         return [galleries, recentlyDeletedGalleries]
     }
     
+    /// The IndexPath of the last selected cell
     private var lastSelectedPath : IndexPath?
     
+    
+    // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         gallaryTable.delegate = self
         gallaryTable.dataSource = self
-        gallaryModel.delegate = self
+        gallaryModel?.delegate = self
         setupTable()
     }
     private func setupTable() {
-        gallaryModel.requestViewableGalleries()
-        gallaryModel.requestRecentlyDeletedGallries()
+        gallaryModel?.requestViewableGalleries()
+        gallaryModel?.requestRecentlyDeletedGallries()
     }
     
     /// Single and double tap gesture recognition
@@ -56,7 +71,7 @@ class GallaryStoreViewController: UIViewController, UIGestureRecognizerDelegate 
         singleTap.require(toFail: doubleTap)
     }
     
-    
+    /// Single tap gesture to segue from cell
     @objc func singleTapSegue(_ sender : UITapGestureRecognizer) {
         
         if let cell = findCellFor(sender: sender) {
@@ -64,7 +79,7 @@ class GallaryStoreViewController: UIViewController, UIGestureRecognizerDelegate 
         }
     }
     
-    
+    /// Double tap gesture to edit cell
     @objc func doubleTapSegue(_ sender : UITapGestureRecognizer) {
         
         if let cell = findCellFor(sender: sender) {
@@ -73,6 +88,7 @@ class GallaryStoreViewController: UIViewController, UIGestureRecognizerDelegate 
 
     }
     
+    /// Helper method to find cell that had a tap gesture
     private func findCellFor(sender: UITapGestureRecognizer) -> GallaryNameTableViewCell? {
         if sender.state == UIGestureRecognizerState.ended {
             let tapLocation = sender.location(in: self.gallaryTable)
@@ -96,7 +112,6 @@ class GallaryStoreViewController: UIViewController, UIGestureRecognizerDelegate 
                 if identifier == SegueIdentifier.showGallaryDetail {
                     if let destinationVC = segue.destination.contents as? ImageGallaryViewController {
                         destinationVC.imageData = allGalleries[cellSent.section][cellSent.row]
-                        destinationVC.delegate = self
                     }
                 }
             }
@@ -104,6 +119,7 @@ class GallaryStoreViewController: UIViewController, UIGestureRecognizerDelegate 
     }
 }
 
+// MARK: Tableview Data Source and Delegates
 extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
@@ -139,7 +155,7 @@ extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            gallaryModel.requestToDeleteGallary(gallary: allGalleries[indexPath.section][indexPath.row])
+            gallaryModel?.requestToDeleteGallary(gallary: allGalleries[indexPath.section][indexPath.row])
         }
     }
     
@@ -150,6 +166,7 @@ extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegat
     }
 }
 
+// MARK: Gallary Model delegates
 extension GallaryStoreViewController : GalleryListDelegate {
     func recentlyDeletedGalleriesDidChange(recentlyDeleted: galleries) {
         recentlyDeletedGalleries = recentlyDeleted
@@ -162,26 +179,18 @@ extension GallaryStoreViewController : GalleryListDelegate {
     
 }
 
+// MARK: Cell editing delegates
 extension GallaryStoreViewController : UserInputDelegate {
     func userUpdatedTextFieldValue(with resulting: String, sender: GallaryNameTableViewCell) {
         guard let indexPath = self.gallaryTable.indexPath(for: sender) else {return}
         
-        gallaryModel.requestNameUpdate(for: allGalleries[indexPath.section][indexPath.row], with: resulting)
+        gallaryModel?.requestNameUpdate(for: allGalleries[indexPath.section][indexPath.row], with: resulting)
         
         
     }
 }
 
-extension GallaryStoreViewController : ImageDetailDataDelegate {
-    func imageDetailWillDisappear(imageData: ImageGallary) {
-         //gallaryModel.requestGallaryContentsUpdate(for: imageData)
-        
-    }
-    
-    
-}
-
-
+// MARK: Constants
 private struct SegueIdentifier {
     static let showGallaryDetail = "showGallaryDetail"
 }

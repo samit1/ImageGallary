@@ -57,15 +57,15 @@ class GallaryStoreViewController: UIViewController {
 extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-            let cell = tableView.dequeueReusableCell(withIdentifier: "GallaryNameCell", for: indexPath)
-            if let galleryCell = cell as? GallaryNameTableViewCell {
-                galleryCell.textField.text = allGalleries[indexPath.section][indexPath.row].galleryName
-                galleryCell.delegate = self
-                galleryCell.isEditing = false
-            }
+        let cell = tableView.dequeueReusableCell(withIdentifier: "GallaryNameCell", for: indexPath)
+        if let galleryCell = cell as? GallaryNameTableViewCell {
+            galleryCell.textField.text = allGalleries[indexPath.section][indexPath.row].galleryName
+            galleryCell.delegate = self
+            galleryCell.isEditing = false
+        }
         
         return cell
-    
+        
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -84,7 +84,7 @@ extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegat
             }
         }
         lastSelectedPath = indexPath
-//        performSegue(withIdentifier: "showGallaryDetail", sender: cell)
+        //        performSegue(withIdentifier: "showGallaryDetail", sender: cell)
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
@@ -102,25 +102,22 @@ extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegat
     // MARK: Segues
     
     // #TODO : Add check for sender
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//
-//        guard let cell = sender as? GallaryNameTableViewCell else {return}
-//        if let cellSend = gallaryTable.indexPath(for: cell) {
-//            if let identifier = segue.identifier {
-//                if identifier == "showGallaryDetail" {
-//                    if let destinationVC = segue.destination.contents as? ImageGallaryViewController {
-//                        //destinationVC.imageData = galleries[cellSend?.item]
-//                        if galleries.indices.contains(cellSend.row) {
-//                            destinationVC.imageData = galleries[cellSend.row]
-//                            destinationVC.delegate = self
-//                           // cell.isEditing = false
-//                            print("segue happened")
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let sender = sender as? GallaryNameTableViewCell else {return}
+        print("Hello")
+        
+        if let cellSent = gallaryTable.indexPath(for: sender), cellSent.section == 0 {
+            
+            if let identifier = segue.identifier {
+                if identifier == "showGallaryDetail" {
+                    if let destinationVC = segue.destination.contents as? ImageGallaryViewController {
+                        destinationVC.imageData = allGalleries[cellSent.section][cellSent.row]
+                        destinationVC.delegate = self 
+                    }
+                }
+            }
+        }
+    }
 }
 
 extension GallaryStoreViewController : GalleryListDelegate {
@@ -147,11 +144,11 @@ extension GallaryStoreViewController : UserInputDelegate {
 
 extension GallaryStoreViewController : ImageDetailDataDelegate {
     func imageDetailWillDisappear(imageData: ImageGallary) {
-       // gallaryModel.requestGallaryContentsUpdate(for: imageData)
+        // gallaryModel.requestGallaryContentsUpdate(for: imageData)
         
     }
-
-
+    
+    
 }
 
 

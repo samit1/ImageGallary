@@ -24,6 +24,8 @@ class ImageGallaryViewController: UICollectionViewController {
         super.viewDidLoad()
         gallary.dragDelegate = self
         gallary.dropDelegate = self
+        
+        self.title = imageData.galleryName
     }
     
     override func viewWillDisappear(_ animated: Bool) {

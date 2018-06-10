@@ -8,7 +8,7 @@
 
 import UIKit
 
-class GallaryStoreViewController: UIViewController {
+class GallaryStoreViewController: UIViewController, UIGestureRecognizerDelegate {
     
     @IBOutlet weak var gallaryTable: UITableView!
     @IBAction func addGallaryTap(_ sender: UIBarButtonItem) {
@@ -45,20 +45,50 @@ class GallaryStoreViewController: UIViewController {
         gallaryModel.requestRecentlyDeletedGallries()
     }
     
-    @IBAction func wasDoubleTapped(_ sender: UITapGestureRecognizer) {
-        if let cellTapped  = gallaryTable.indexPathForSelectedRow {
-            let cell = gallaryTable.cellForRow(at: cellTapped)
-            if let gallaryCell = cell as? GallaryNameTableViewCell {
-                gallaryCell.isEditing = true
+    /// Single and double tap gesture recognition
+    private func addTapGestures(for cell: GallaryNameTableViewCell) {
+        let singleTap = UITapGestureRecognizer(target: self, action: #selector(singleTapSegue))
+        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(doubleTapSegue))
+        singleTap.numberOfTapsRequired = 1
+        doubleTap.numberOfTapsRequired = 2
+        cell.addGestureRecognizer(singleTap)
+        cell.addGestureRecognizer(doubleTap)
+        singleTap.require(toFail: doubleTap)
+    }
+    
+    
+    @objc func singleTapSegue(_ sender : UITapGestureRecognizer) {
+        
+        if let cell = findCellFor(sender: sender) {
+            performSegue(withIdentifier: SegueIdentifier.showGallaryDetail, sender: cell)
+        }
+    }
+    
+    
+    @objc func doubleTapSegue(_ sender : UITapGestureRecognizer) {
+        
+        if let cell = findCellFor(sender: sender) {
+            cell.isEditing = true
+        }
+
+    }
+    
+    private func findCellFor(sender: UITapGestureRecognizer) -> GallaryNameTableViewCell? {
+        if sender.state == UIGestureRecognizerState.ended {
+            let tapLocation = sender.location(in: self.gallaryTable)
+            if let tapIndexPath = self.gallaryTable.indexPathForRow(at: tapLocation) {
+                if let tappedCell = self.gallaryTable.cellForRow(at: tapIndexPath) as? GallaryNameTableViewCell {
+                    return tappedCell
+                }
             }
         }
+        return nil
     }
     
     // MARK: Segues
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let sender = sender as? GallaryNameTableViewCell else {return}
-        print("Hello")
         
         if let cellSent = gallaryTable.indexPath(for: sender), cellSent.section == 0 {
             
@@ -82,6 +112,7 @@ extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegat
             galleryCell.textField.text = allGalleries[indexPath.section][indexPath.row].galleryName
             galleryCell.delegate = self
             galleryCell.isEditing = false
+            addTapGestures(for: galleryCell)
         }
         
         return cell
@@ -104,7 +135,6 @@ extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegat
             }
         }
         lastSelectedPath = indexPath
-        //        performSegue(withIdentifier: showGallaryDetail, sender: cell)
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
@@ -144,7 +174,7 @@ extension GallaryStoreViewController : UserInputDelegate {
 
 extension GallaryStoreViewController : ImageDetailDataDelegate {
     func imageDetailWillDisappear(imageData: ImageGallary) {
-        // gallaryModel.requestGallaryContentsUpdate(for: imageData)
+         //gallaryModel.requestGallaryContentsUpdate(for: imageData)
         
     }
     

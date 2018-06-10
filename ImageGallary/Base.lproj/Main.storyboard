@@ -143,13 +143,9 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="textField" destination="M5Y-sb-EcU" id="NNO-Wa-yTX"/>
-                                            <segue destination="7cU-OJ-KPB" kind="showDetail" identifier="showGallaryDetail" id="DBZ-cb-DAB"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
-                                <connections>
-                                    <outletCollection property="gestureRecognizers" destination="Pby-Tr-fvY" appends="YES" id="gz4-yq-3Oc"/>
-                                </connections>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -171,14 +167,10 @@
                     </navigationItem>
                     <connections>
                         <outlet property="gallaryTable" destination="Zpo-id-9Vn" id="KSe-nj-oCH"/>
+                        <segue destination="7cU-OJ-KPB" kind="showDetail" identifier="showGallaryDetail" id="LS7-m0-LqZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ESp-te-mPW" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer numberOfTapsRequired="2" id="Pby-Tr-fvY">
-                    <connections>
-                        <action selector="wasDoubleTapped:" destination="QKF-uM-5vq" id="TV5-Ak-Onb"/>
-                    </connections>
-                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-360" y="-905"/>
         </scene>
@@ -202,6 +194,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="DBZ-cb-DAB"/>
+        <segue reference="LS7-m0-LqZ"/>
     </inferredMetricsTieBreakers>
 </document>

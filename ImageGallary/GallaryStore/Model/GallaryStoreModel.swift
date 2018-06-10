@@ -51,6 +51,13 @@ class GalleriesModel  {
         }
     }
     
+    func requestToUndeleteGallary(gallary : ImageGallary) {
+        guard recentltyDeletedGalleries.contains(gallary) else {return}
+        let gallaryToMove = recentltyDeletedGalleries.remove(at: recentltyDeletedGalleries.index(of: gallary)!)
+        viewableGalleries.append(gallaryToMove)
+    }
+    
+    
      func requestNameUpdate(for gallaryItem: ImageGallary, with nameAfterChange: String) {
         
         if let gallaryIndex = viewableGalleries.index(of: gallaryItem) {

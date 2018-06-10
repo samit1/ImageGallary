@@ -85,7 +85,7 @@ class GallaryStoreViewController: UIViewController, UIGestureRecognizerDelegate 
         if let cell = findCellFor(sender: sender) {
             cell.isEditing = true
         }
-
+        
     }
     
     /// Helper method to find cell that had a tap gesture
@@ -165,7 +165,28 @@ extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegat
             return "Recently Deleted"
         } else {return nil}
     }
+    
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        if indexPath.section == 1 {
+            let gallery = allGalleries[indexPath.section][indexPath.row]
+            
+            let undelete = UIContextualAction(style: .normal,
+                                              title: "Undelete") { (
+                                                contextAction : UIContextualAction,
+                                                sourceView: UIView,
+                                                completionHandler: (Bool) -> Void) in
+                                                self.gallaryModel?.requestToUndeleteGallary(gallary: gallery)
+            }
+            
+            undelete.backgroundColor = UIColor.green
+            let configs = UISwipeActionsConfiguration(actions: [undelete])
+            return configs
+        }
+        return nil
+    }
 }
+
+
 
 // MARK: Gallary Model delegates
 extension GallaryStoreViewController : GalleryListDelegate {

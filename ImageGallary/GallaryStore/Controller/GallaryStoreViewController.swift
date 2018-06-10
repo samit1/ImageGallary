@@ -54,6 +54,24 @@ class GallaryStoreViewController: UIViewController {
         }
     }
     
+    // MARK: Segues
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let sender = sender as? GallaryNameTableViewCell else {return}
+        print("Hello")
+        
+        if let cellSent = gallaryTable.indexPath(for: sender), cellSent.section == 0 {
+            
+            if let identifier = segue.identifier {
+                if identifier == SegueIdentifier.showGallaryDetail {
+                    if let destinationVC = segue.destination.contents as? ImageGallaryViewController {
+                        destinationVC.imageData = allGalleries[cellSent.section][cellSent.row]
+                        destinationVC.delegate = self
+                    }
+                }
+            }
+        }
+    }
 }
 
 extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegate {
@@ -86,7 +104,7 @@ extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegat
             }
         }
         lastSelectedPath = indexPath
-        //        performSegue(withIdentifier: "showGallaryDetail", sender: cell)
+        //        performSegue(withIdentifier: showGallaryDetail, sender: cell)
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
@@ -99,26 +117,6 @@ extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegat
         if section == 1 {
             return "Recently Deleted"
         } else {return nil}
-    }
-    
-    // MARK: Segues
-    
-    // #TODO : Add check for sender
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let sender = sender as? GallaryNameTableViewCell else {return}
-        print("Hello")
-        
-        if let cellSent = gallaryTable.indexPath(for: sender), cellSent.section == 0 {
-            
-            if let identifier = segue.identifier {
-                if identifier == "showGallaryDetail" {
-                    if let destinationVC = segue.destination.contents as? ImageGallaryViewController {
-                        destinationVC.imageData = allGalleries[cellSent.section][cellSent.row]
-                        destinationVC.delegate = self 
-                    }
-                }
-            }
-        }
     }
 }
 
@@ -153,6 +151,10 @@ extension GallaryStoreViewController : ImageDetailDataDelegate {
     
 }
 
+
+private struct SegueIdentifier {
+    static let showGallaryDetail = "showGallaryDetail"
+}
 
 
 

@@ -11,16 +11,24 @@ import CoreData
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    
     var window: UIWindow?
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         let gallaryStore = GalleriesModel()
         
-        /// Set galleries
+        /// Set galleries in gallary store
         if let gallaryStoreVC = (window?.rootViewController as? UISplitViewController)?.viewControllers.first?.contents as? GallaryStoreViewController  {
             gallaryStoreVC.gallaryModel = gallaryStore
+        }
+        
+        /// Set the detail controller to be the first item in the gallery store, if available
+        if let imageDetailVC = (window?.rootViewController as? UISplitViewController)?.viewControllers.last?.contents as? ImageGallaryViewController {
+            imageDetailVC.gallaryStore = gallaryStore
+            if let first = gallaryStore.viewableGalleries.first {
+                imageDetailVC.imageData = first
+            }
         }
 
         return true

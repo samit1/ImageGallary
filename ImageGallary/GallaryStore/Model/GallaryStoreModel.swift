@@ -15,8 +15,8 @@ protocol GalleryListDelegate : class {
 
 class GalleriesModel  {
     
-    private var viewableGalleries = galleries().uniquified {didSet {delegate?.viewableGalleriesDidChange(viewableGalleries: viewableGalleries) }}
-    private var recentltyDeletedGalleries = galleries().uniquified {didSet { delegate?.recentlyDeletedGalleriesDidChange(recentlyDeleted: recentltyDeletedGalleries)}}
+    private (set) var viewableGalleries = galleries().uniquified {didSet {delegate?.viewableGalleriesDidChange(viewableGalleries: viewableGalleries) }}
+    private (set) var recentltyDeletedGalleries = galleries().uniquified {didSet { delegate?.recentlyDeletedGalleriesDidChange(recentlyDeleted: recentltyDeletedGalleries)}}
     
     init() {
         if viewableGalleries.isEmpty {
@@ -34,6 +34,8 @@ class GalleriesModel  {
     func requestRecentlyDeletedGallries() {
         delegate?.recentlyDeletedGalleriesDidChange(recentlyDeleted: recentltyDeletedGalleries)
     }
+    
+    
     
     /// - parameter gallery : the gallary that should be deleted
     /// - NOTE: The gallary is first checked to see if it can be removed from a viewable gallery

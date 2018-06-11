@@ -75,12 +75,14 @@ class ImageGallaryViewController: UICollectionViewController {
     
     // MARK: Gestures
     
+    /// Add double tap gesture fopr cell
     func addDoubleTapGesture(to cell: ImageCollectionViewCell) {
         let gesture = UITapGestureRecognizer(target: self, action: #selector(wasDoubleTapped))
         gesture.numberOfTapsRequired = 2
         cell.addGestureRecognizer(gesture)
     }
     
+    /// Handle tapping event
     @objc func wasDoubleTapped(_ sender: UITapGestureRecognizer) {
         if sender.state == .ended {
             let tapLocation = sender.location(in: self.gallary)
@@ -141,27 +143,39 @@ extension ImageGallaryViewController : UICollectionViewDropDelegate {
                     item.dragItem,
                     to: UICollectionViewDropPlaceholder(insertionIndexPath: destinationIndexPath, reuseIdentifier: "Placeholder"))
                 
+                
+                /// Create a model representation of dragged item.
+                /// The data points are updated later
+                var draggedItem = ImageItem(heightMultipleToWidth: 1.0, url: nil)
+                
                 /// Asynchonously go get the data and insert
                 item.dragItem.itemProvider.loadObject(ofClass: NSURL.self, completionHandler: { (provider, error) in
                     DispatchQueue.main.async {
-                        
                         if let url = provider as? URL {
-                            placeholderContext.commitInsertion(dataSourceUpdates: {[unowned self] insertionIndexPath in
                                 let urlImage = url.imageURL
-                                let imgItem = ImageItem(heightMultipleToWidth: 1.0, url: urlImage)
-                                self.gallary.reloadData()
-                                self.imageData.insert(item: imgItem, at: destinationIndexPath.item)
-                                
-                            })
-                        } else {
-                            placeholderContext.deletePlaceholder()
-                        }
+                                draggedItem.url = urlImage
+                            }
                     }
+                    
                 })
+                    
+                
+                item.dragItem.itemProvider.loadObject(ofClass: UIImage.self) { (provider, error) in
+                    DispatchQueue.main.async {
+                        if let image = provider as? UIImage {
+                            placeholderContext.commitInsertion(dataSourceUpdates: {[unowned self] insertionIndexPath in
+                            draggedItem.heightMultipleToWidth = Double(image.aspectRatio)
+                            self.gallary.reloadData()
+                            self.imageData.insert(item: draggedItem, at: destinationIndexPath.item)
+                            self.gallary.reloadData()
+                        })
+                    }
+                }
+                
             }
         }
     }
-    
+    }
     
     /// Specify the type of data which can be dropped
     /// The data must be a URL and image
@@ -205,9 +219,10 @@ extension ImageGallaryViewController : UICollectionViewDragDelegate {
 extension ImageGallaryViewController : UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         guard imageData.gallery.indices.contains(indexPath.item) else {return CGSize.zero}
-        let width = collectionView.bounds.width / 4
+        let width = collectionView.bounds.width / 3 - 10
         let heightMultiple = imageData.gallery[indexPath.item].heightMultipleToWidth
         let height = heightMultiple != nil ?  width * CGFloat(heightMultiple!) : 0
+        
         return CGSize(width: width, height: height)
         
     }

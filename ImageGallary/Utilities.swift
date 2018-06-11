@@ -142,6 +142,13 @@ extension UIImage
     }
 }
 
+extension UIImage {
+    /// Aspect Ratio is the height divided by the width
+    var aspectRatio : CGFloat {
+        return self.size.height  / self.size.width
+    }
+}
+
 extension String {
     func madeUnique(withRespectTo otherStrings: [String]) -> String {
         var possiblyUnique = self

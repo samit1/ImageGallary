@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         let gallaryStore = GalleriesModel()
         
+        /// Set galleries
         if let gallaryStoreVC = (window?.rootViewController as? UISplitViewController)?.viewControllers.first?.contents as? GallaryStoreViewController  {
             gallaryStoreVC.gallaryModel = gallaryStore
         }

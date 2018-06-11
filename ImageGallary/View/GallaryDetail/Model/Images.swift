@@ -12,18 +12,14 @@ import Foundation
 /// Implement Equatable to make comarisons easier
 struct ImageItem : Equatable {
     static func == (lhs: ImageItem, rhs: ImageItem) -> Bool {
-        guard lhs.url != nil && lhs.heightMultipleToWidth != nil
-            && rhs.url != nil && rhs.heightMultipleToWidth != nil else {return false}
-        
-        
-        return lhs.heightMultipleToWidth == rhs.heightMultipleToWidth
-            && lhs.url == rhs.url
+        return lhs.uuid == rhs.uuid
     }
     
-    private (set) var heightMultipleToWidth: Double?
-    private (set) var url : URL?
+    var heightMultipleToWidth: Double?
+    var url : URL?
+    private (set) var uuid = NSUUID().uuidString
     
-    init(heightMultipleToWidth : Double, url : URL) {
+    init(heightMultipleToWidth : Double, url : URL?) {
         self.heightMultipleToWidth = heightMultipleToWidth
         self.url = url
     }
@@ -47,7 +43,6 @@ struct ImageGallary : Equatable {
         guard gallery.indices.contains(index) else {
             appendToEnd(item: item)
             return
-            
         }
         
         gallery.insert(item, at: index)
@@ -71,9 +66,13 @@ struct ImageGallary : Equatable {
         gallery.swapAt(itemIndex1, itemIndex2)
     }
     
+
+    
     static func == (lhs: ImageGallary, rhs: ImageGallary) -> Bool {
         return lhs.galleryUUID == rhs.galleryUUID
     }
+    
+    
     
 }
 

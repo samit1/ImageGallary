@@ -26,21 +26,21 @@ class GallaryStoreViewController: UIViewController, UIGestureRecognizerDelegate 
     }
     
     /// The viewable galleries
-    fileprivate var galleries = [ImageGallary]() {didSet {
+    fileprivate var _galleries = [ImageGallary]() {didSet {
         self.gallaryTable?.reloadData()
         }
     }
     
     /// Recently deleted galeries
-    fileprivate var recentlyDeletedGalleries = [ImageGallary]() {didSet {
-        if recentlyDeletedGalleries.count == 0 && galleries.count == 0 {gallaryModel?.addGalary()}
+    fileprivate var _recentlyDeletedGalleries = [ImageGallary]() {didSet {
+        if _recentlyDeletedGalleries.count == 0 && _galleries.count == 0 {gallaryModel?.addGalary()}
         self.gallaryTable?.reloadData()
         }
     }
     
     /// Viewable galeries and recently deleted galleries.
     fileprivate var allGalleries : [[ImageGallary]] {
-        return [galleries, recentlyDeletedGalleries]
+        return [_galleries, _recentlyDeletedGalleries]
     }
     
     /// The IndexPath of the last selected cell
@@ -191,11 +191,11 @@ extension GallaryStoreViewController : UITableViewDataSource, UITableViewDelegat
 // MARK: Gallary Model delegates
 extension GallaryStoreViewController : GalleryListDelegate {
     func recentlyDeletedGalleriesDidChange(recentlyDeleted: galleries) {
-        recentlyDeletedGalleries = recentlyDeleted
+        _recentlyDeletedGalleries = recentlyDeleted
     }
     
     func viewableGalleriesDidChange(viewableGalleries: galleries) {
-        galleries = viewableGalleries
+        _galleries = viewableGalleries
     }
     
     

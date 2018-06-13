@@ -11,7 +11,13 @@ import UIKit
 class ImageGallaryViewController: UICollectionViewController {
     
     // MARK: Properties
-    @IBOutlet var gallary: UICollectionView!
+    @IBOutlet var gallary: UICollectionView! {
+        didSet {
+            gallary.minimumZoomScale = 0.75
+            gallary.maximumZoomScale = 1.5
+            gallary.delegate = self
+        }
+    }
     
     var gallaryStore : GalleriesModel? {
         didSet {
@@ -26,6 +32,13 @@ class ImageGallaryViewController: UICollectionViewController {
         }
     }
     
+    var flowLayout : UICollectionViewFlowLayout? {
+        return collectionView?.collectionViewLayout as? UICollectionViewFlowLayout
+    }
+    
+    var minimimumItemSize : CGFloat {
+        return gallary.frame.size.width / 3 - 10
+    }
     
     // MARK: Lifecycle
     override func viewDidLoad() {
@@ -94,6 +107,17 @@ class ImageGallaryViewController: UICollectionViewController {
             
         }
     }
+    
+    // MARK: ScrollView Delegate Methods
+    override func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return self.view
+    }
+    
+    override func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        print("invalidated")
+        flowLayout?.invalidateLayout()
+    }
+    
     
     //MARK : Segue
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -219,7 +243,7 @@ extension ImageGallaryViewController : UICollectionViewDragDelegate {
 extension ImageGallaryViewController : UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         guard imageData.gallery.indices.contains(indexPath.item) else {return CGSize.zero}
-        let width = collectionView.bounds.width / 3 - 10
+        let width = minimimumItemSize
         let heightMultiple = imageData.gallery[indexPath.item].heightMultipleToWidth
         let height = heightMultiple != nil ?  width * CGFloat(heightMultiple!) : 0
         
